@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运动</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #div1{
+            width: 500px;
+            height: 200px;
+            background: red;
+            position: relative;
+            left: -500px;
+        }
+        #div1 span{
+            width: 20px;
+            height: 50px;
+            background: deepskyblue;
+            position: absolute;
+            left: 500px;
+            top: 75px;
+        }
+    </style>
+    <script>
+        window.onload=function () {
+            var box1=document.getElementById("div1");
+            box1.onmouseover=function () {
+                start(0);
+            };
+            box1.onmouseout=function () {
+                start(-500);
+            };
+            }
+        var timer=null;
+        function start(x) {
+            clearInterval(timer);
+            var box1=document.getElementById("div1");
+            /*//匀速运动
+            if(x>box1.offsetLeft){
+                s=1;
+
+            }else{
+                s= -1;
+            }*/
+            timer = setInterval(function () {
+                var s=(x-box1.offsetLeft)/20;//缓冲运动
+                (s>0)? s=Math.ceil(s):s=Math.floor(s);
+                console.log(s);
+                if(box1.offsetLeft==x){
+                    clearInterval(timer)
+                }else{
+                    box1.style.left=box1.offsetLeft+s+"px";
+                }
+            },15)
+        }
+        function getStyle(obj, attr) {
+            if(obj.currentStyle){
+                return obj.currentStyle[attr];//IE浏览器
+            }else{
+                return getComputedStyle(obj,false)[attr];//火狐浏览器
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+<div id="div1"><span>分享</span></div>
+</body>
+</html>

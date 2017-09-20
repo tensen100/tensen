@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>听指令的小方块</title>
+    <!--实现一个类似棋盘的格子空间，每个格子用两个数字可以定位，一个红正方形的DOM在这个空间内，正方形中的蓝色边表示这是他的正面，有一个input输入框-->
+    <!--在输入框中允许输入如下指令，按下按钮后，使得正方形做相应动作-->
+    <!--GO：向蓝色边所面向的方向前进一格（一格等同于正方形的边长）-->
+    <!--TUN LEF：向左转（逆时针旋转90度）-->
+    <!--TUN RIG：向右转（顺时针旋转90度）-->
+    <!--TUN BAC：向右转（旋转180度）-->
+    <!--移动不能超出格子空间-->
+    <style>
+        table{
+            border-collapse: collapse;
+        }
+        td{
+            width: 30px;
+            height: 30px;
+            border:1px solid #000;
+            box-sizing: border-box;
+        }
+        .box-wrap{
+            position: relative;
+        }
+        .box{
+            width: 30px;
+            height: 30px;
+            box-sizing: border-box;
+            background: #72b16a;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transition: all 0.5s;
+        }
+        .top{
+            border-top: 10px solid #0000ff;
+        }
+        /*.left{*/
+            /*border-left: 10px solid #0000ff;*/
+        /*}*/
+        /*.right{*/
+            /*border-right: 10px solid #0000ff;*/
+        /*}*/
+        /*.bottom{*/
+            /*border-bottom: 10px solid #0000ff;*/
+        /*}*/
+    </style>
+</head>
+<body>
+<div class="box-wrap">
+    <table>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <div id="box" class="box top"></div>
+</div>
+<div class="btns">
+    <button id="go">GO</button>
+    <button id="left">TUN LEF</button>
+    <button id="right">TUN RIG</button>
+    <button id="back">TUN BAC</button>
+
+</div>
+<script>
+    function box(){
+        this.direction = "top";
+        this.positionX = 0;
+        this.positionY = 0;
+        this.box = document.getElementById("box");
+        this.bind()
+    };
+
+    box.prototype = {
+        /**
+         * 向前走
+         */
+        go:function () {
+            switch(this.direction){
+                case "top":if(this.positionY-1<0){alert("已到达边缘，无法移动");}else{this.positionY--;};break;
+                case "left":if(this.positionX-1<0){alert("已到达边缘，无法移动");}else{this.positionX--;};break;
+                case "right":if(this.positionX+1>4){alert("已到达边缘，无法移动");}else{this.positionX++;};break;
+                case "bottom":if(this.positionY+1>4){alert("已到达边缘，无法移动");}else{this.positionY++;};break;
+                default:alert("方向有误，请刷新页面后重新进行;");break;
+            }
+            this.renewposition();
+        },
+        /**
+         * 向左转
+         */
+        turnLeft:function () {
+            switch (this.direction){
+                case "top":this.direction="left"; this.box.style.transform = 'rotate(270deg)';break;
+                case "left":this.direction="bottom";this.box.style.transform = 'rotate(180deg)';break;
+                case "right":this.direction="top";this.box.style.transform = 'rotate(0deg)';break;
+                case "bottom":this.direction="right";this.box.style.transform = 'rotate(90deg)';break;
+                default:alert("方向有误，请刷新页面后重新进行;");break;
+            }
+        },
+        /**
+         * 向右转
+         */
+        turnRight:function () {
+            switch(this.direction){
+                case "top":this.direction="right";this.box.style.transform = 'rotate(90deg)';break;
+                case "left":this.direction="top";this.box.style.transform = 'rotate(0deg)';break;
+                case "right":this.direction="bottom";this.box.style.transform = 'rotate(180deg)';break;
+                case "bottom":this.direction="left";this.box.style.transform = 'rotate(270deg)';break;
+                default:alert("方向有误，请刷新页面后重新进行;");break;
+            }
+        },
+        /**
+         * 向后转
+         */
+        turnBack:function () {
+            switch(this.direction){
+                case "top":this.direction="bottom";this.box.style.transform = 'rotate(180deg)';break;
+                case "left":this.direction="right";this.box.style.transform = 'rotate(90deg)';break;
+                case "right":this.direction="left";this.box.style.transform = 'rotate(270deg)';break;
+                case "bottom":this.direction="top";this.box.style.transform = 'rotate(0deg)';break;
+                default:alert("方向有误，请刷新页面后重新进行;");break;
+            }
+        },
+        /**
+         * 更新位置
+         */
+        renewposition:function () {
+            this.box.style.top = this.positionY*30+"px";
+            this.box.style.left = this.positionX*30+"px";
+        },
+
+        bind:function () {
+            var that = this;
+            document.getElementById("go").onclick = function () {
+                that.go();
+            };
+            document.getElementById("left").onclick = function () {
+                that.turnLeft();
+            };
+            document.getElementById("right").onclick = function () {
+                that.turnRight();
+            };
+            document.getElementById("back").onclick = function () {
+                that.turnBack();
+            };
+        }
+    }
+
+    window.onload = function () {
+        new box();
+    }
+</script>
+</body>
+</html>

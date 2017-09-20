@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>布局</title>
+    <link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+<h3>自适应内部元素</h3>
+<figure class="layout1">
+    <img src="../images/8.jpg" />
+    <figcaption>
+        周杰伦，1979年1月18日出生于台湾省新北市，中国台湾流行乐男歌手、音乐人、演员、导演、编剧、监制、商人
+    </figcaption>
+</figure>
+<br/>
+<h3>精确控制表格列宽</h3>
+<table class="layout2">
+    <tr>
+        <td>周杰伦，1979年1月18...</td>
+        <td>2000年，周杰伦被吴宗宪发掘并推出首张专辑《Jay》，其凭借这张专辑成功打开了中国内地以及东西南亚市场。</td>
+    </tr>
+    <tr>
+        <td>2005年，涉足影视，...</td>
+        <td>2007年，成立JVR有限公司；同年，自编自导自演电影《不能说的秘密》，获得台湾电影金马奖年度台湾杰出电影奖。</td>
+    </tr>
+</table>
+<br/>
+<h3>根据兄弟元素设置样式</h3>
+<button onclick="add()">根据兄弟元素的数量设置样式</button>
+<ul class="layout3">
+    <li></li>
+</ul>
+<br/>
+<button onclick="add2()">根据兄弟元素的数量范围设置样式</button>
+<ul class="layout4">
+    <li></li>
+</ul>
+</body>
+<script>
+    function add() {
+        var li=document.createElement("li");
+        var ul=document.getElementsByClassName("layout3")[0];
+        ul.appendChild(li)
+    }
+    function add2+() {
+        var li=document.createElement("li");
+        var ul=document.getElementsByClassName("layout4")[0];
+        ul.appendChild(li)
+    }
+</script>
+</html>

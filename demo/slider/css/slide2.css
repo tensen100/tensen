@@ -1,0 +1,111 @@
+.slide {
+    width: 80%;
+    position: relative;
+    margin: auto;
+    overflow: hidden;
+}
+.slide .main, .slide .main .main-item{
+    width: 100%;
+}
+.slide .main{
+    overflow: hidden;
+}
+.slide .main .main-item{
+    position: absolute;
+    left:50%;
+    top: 0;
+    opacity: 0;
+    transition: all 0.8s;
+}
+.slide .main .main-item h2,.slide .main .main-item h3{
+    transition: all 0.8s .5s;
+}
+.slide .main .main-item img{
+    width: 100%;
+}
+.slide .main .main-item .caption{
+    position: absolute;
+    left: 10%;
+    top: 40%;
+    z-index: 1;
+}
+.slide .main .main-item .caption h2,.slide .main .main-item .caption h3{
+    text-align: right;
+    position: relative;
+    opacity: 0;
+}
+.slide .main .main-item .caption h2{
+    font-size: 40px;
+    line-height: 50px;
+    color: #b5b5b5;
+    right: 45px;
+}
+.slide .main .main-item .caption h3{
+    font-size: 70px;
+    line-height: 70px;
+    color: #f5f5f5;
+    right: -45px
+}
+.slide .main .main-active{
+    opacity: 1;
+    left:0;
+}
+.slide .main .main-active .caption h2,.slide .main .main-active .caption h3{
+    right: 0;
+    opacity: 1;
+}
+
+.slide .ctr{
+    height: 13px;
+    width: 100%;
+    line-height: 13px;
+    text-align: left;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: #f00;
+}
+.slide .ctr .ctr-item{
+    display: block;
+    width: 20%;
+    height: 100%;
+    position: relative;
+    background: #eee;
+    float: left;
+    border-right:2px solid #f00 ;
+    box-sizing: border-box;
+}
+.slide .ctr .ctr-item:last-child{
+    border-right: none;
+}
+.slide .ctr .ctr-item:hover{
+    background: #f5f5f5;
+}
+.slide .ctr .ctr-active{
+    background-color: #000;
+}
+.slide .ctr .ctr-item:hover img{
+    bottom:13px;
+    opacity: 1;
+}
+
+.slide .ctr .ctr-item img{
+    width: 100%;
+    position: absolute;
+    bottom: 20px;
+    opacity: 0;
+    transition: all .5s;
+
+    /*below倒影方向：底边
+   *0px 偏移
+   *gradient 遮罩：渐变
+   */
+    -webkit-box-reflect: below 0px -webkit-gradient(
+            linear,/*线性渐变*/
+            left top,/*起始位置*/
+            left bottom,/*结束位置*/
+            from(transparent),/*开始颜色*/
+            color-stop(50%,transparent),/*中间位置，过度点，颜色*/
+            to(rgba(255,255,255,.3))/*结束颜色*/
+    );
+}

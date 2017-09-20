@@ -1,0 +1,24 @@
+*{margin: 0;padding: 0}
+a{text-decoration: none}
+body{
+    background: #333;
+    font-size: 14px;
+    color: #767777;
+    font-family: 黑体;
+}
+ul,li{
+    list-style: none;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.clear:before,.clear:after{
+    display: table;
+    content: " ";
+}
+.clear:after{
+    clear: both;
+}

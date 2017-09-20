@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>dom</title>
+    <style>
+        ul,li{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        #placeholder{
+            width: 500px;
+            border: 1px dashed #666;
+            padding: 5px;
+        }
+        ul{
+            overflow: auto;
+        }
+        li{
+            float: left;
+            padding-left: 1em;
+        }
+        h3{
+            color: #333333;
+        }
+        a{
+            color: #cc6600;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+<ul id="imgList">
+   <!-- <li><a href="img/1.jpeg" title="pic1" onclick="showPic(this);return false">pic1</a></li>
+    <li><a href="img/2.jpeg" title="pic2" onclick="showPic(this);return false">pic2</a></li>
+    <li><a href="img/3.jpeg" title="pic3" onclick="showPic(this);return false">pic3</a></li>
+    <li><a href="img/4.jpeg" title="pic4" onclick="showPic(this);return false">pic4</a></li>
+    <li><a href="img/5.jpeg" title="pic5" onclick="showPic(this);return false">pic5</a></li>
+    <li><a href="img/6.jpeg" title="pic6" onclick="showPic(this);return false">pic6</a></li>
+    <li><a href="img/7.jpeg" title="pic7" onclick="showPic(this);return false">pic7</a></li>
+    <li><a href="img/8.jpeg" title="pic8" onclick="showPic(this);return false">pic8</a></li>-->
+    <li><a href="../../images/1.jpg" title="pic1">pic1</a></li>
+    <li><a href="../../images/2.jpg" title="pic2">pic2</a></li>
+    <li><a href="../../images/3.jpg" title="pic3">pic3</a></li>
+    <li><a href="../../images/4.jpg" title="pic4">pic4</a></li>
+    <li><a href="../../images/5.jpg" title="pic5">pic5</a></li>
+    <li><a href="../../images/6.jpg" title="pic6">pic6</a></li>
+    <li><a href="../../images/7.jpg" title="pic7">pic7</a></li>
+    <li><a href="../../images/8.jpg" title="pic8">pic8</a></li>
+</ul>
+
+<h3 id="description">Choose an image.</h3>
+<img id="placeholder" src="../../images/placeholder.jpg">
+<script>
+
+    function showPic(ele) {
+        //如果placeholder不存在，终止程序
+        if(!document.getElementById("placeholder")){
+            return false;
+        }
+        var src = ele.getAttribute("href");
+        var placeholder = document.getElementById("placeholder");
+//        placeholder.setAttribute("src",src)
+
+        //判断是否是IMG标签
+        if(placeholder.nodeName != "IMG"){
+            return false;
+        }
+        placeholder.src = src;//一级DOM兼容性最好
+
+        if(document.getElementById("description")){
+            var description = document.getElementById("description");
+//            if(ele.getAttribute("title")){
+//                var text = ele.getAttribute("title");
+//            }else {
+//                var text = "";
+//            }
+            var text = ele.getAttribute("title") ? ele.getAttribute("title"):"";
+
+            //判断节点类型
+            if(description.nodeType == 3){
+                description.firstChild.nodeValue = text;
+            }
+
+        }
+        //图片切换成功返回false ,阻止onclick事件默认行为
+        return true;
+    }
+
+    function prepareGallery() {
+        //检查浏览器是否支持getElementsByTagName() 和 getElementById();
+        if(!document.getElementsByTagName || !document.getElementById){
+            return false;
+        }
+
+        var imgList = document.getElementById("imgList").getElementsByTagName("a");
+        for(var i = 0;i<imgList.length;i++){
+            imgList[i].onclick = function () {
+                //根据返回值判断是否禁用浏览器默认行为；
+                return !showPic(this);
+            }
+        }
+    }
+
+    window.onload = prepareGallery();
+
+    /**
+     * 添加onload队列；
+     * @param fun
+     */
+    function addLoadEvent(fun) {
+        var oldonload = window.onload;
+        if(typeof window.onload != "function"){
+            window.onload = fun;
+        }else{
+            window.onload = function () {
+                oldonload();
+                fun();
+            }
+        }
+    }
+
+    function addClass(ele, value) {
+        if(!ele.className){
+            ele.className = value;
+        }else{
+            ele.className += " "+value
+        }
+    }
+</script>
+</body>
+</html>

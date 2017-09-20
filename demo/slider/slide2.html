@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slide 1</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/slide2.css">
+</head>
+<body>
+<div class="slide">
+    <ul class="main">
+        <li class="main-item">
+            <div class="caption">
+                <h2>caption h2</h2>
+                <h3>caption h3</h3>
+            </div>
+            <img src="imgs/1.jpg" alt="">
+        </li>
+        <li class="main-item">
+            <div class="caption">
+                <h2>caption h2</h2>
+                <h3>caption h3</h3>
+            </div>
+            <img src="imgs/2.jpg" alt="">
+        </li>
+        <li class="main-item">
+            <div class="caption">
+                <h2>caption h2</h2>
+                <h3>caption h3</h3>
+            </div>
+            <img src="imgs/3.jpg" alt="">
+        </li>
+        <li class="main-item">
+            <div class="caption">
+                <h2>caption h2</h2>
+                <h3>caption h3</h3>
+            </div>
+            <img src="imgs/4.jpg" alt="">
+        </li>
+        <li class="main-item">
+            <div class="caption">
+                <h2>caption h2</h2>
+                <h3>caption h3</h3>
+            </div>
+            <img src="imgs/5.jpg" alt="">
+        </li>
+    </ul>
+    <div class="ctr">
+        <a class="ctr-item" href="javascript:jump(0);">
+            <img src="imgs/1.jpg" alt=" ">
+        </a>
+        <a class="ctr-item" href="javascript:jump(1);">
+            <img src="imgs/2.jpg" alt=" ">
+        </a>
+        <a class="ctr-item" href="javascript:jump(2);">
+            <img src="imgs/3.jpg" alt=" ">
+        </a>
+        <a class="ctr-item" href="javascript:jump(3);">
+            <img src="imgs/4.jpg" alt=" ">
+        </a>
+        <a class="ctr-item" href="javascript:jump(4);">
+            <img src="imgs/5.jpg" alt=" ">
+        </a>
+    </div>
+</div>
+<script>
+    var lastMainItem,
+            lastCtrItem,
+//            currentMainItem,
+//            currrentCtrItem,
+            mainItems,
+            ctrItems;
+
+    window.onload=function (){
+        mainItems = document.getElementsByClassName("main-item");
+        ctrItems = document.getElementsByClassName("ctr-item");
+        var main = document.getElementsByClassName("main")[0];
+//        console.log( main);
+        main.style.height = mainItems[0].offsetHeight+"px";
+        mainItems[0].className += " main-active";
+        ctrItems[0].className += " ctr-active";
+        lastMainItem = mainItems[0];
+        lastCtrItem = ctrItems[0]
+    };
+
+    function jump(index) {
+        lastCtrItem.className = lastCtrItem.className.replace(" ctr-active","");
+        lastMainItem.className =lastMainItem.className.replace(" main-active","");
+        ctrItems[index].className += " ctr-active";
+        mainItems[index].className += " main-active";
+        lastCtrItem = ctrItems[index];
+        lastMainItem = mainItems[index]
+    }
+</script>
+<script type="text/javascript" src="js/slide2.js"></script>
+</body>
+</html>

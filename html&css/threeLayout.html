@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三列布局</title>
+    <style>
+        /*内边距*/
+        body,
+        .container,
+        .container .left,
+        .container .center,
+        .container .right.right
+        {
+            padding: 19px;
+        }
+        /*背景*/
+        .container,
+        .container .left .logo,
+        .container .right .logo
+        {
+            background: #eee;
+        }
+        .container .left,
+        .container .center,
+        .container .right{
+            background: #fff;
+        }
+
+        /*边框*/
+        .container,
+        .container .left,
+        .container .center,
+        .container .right{
+            border: 1px solid #999;
+        }
+
+        .container .left .logo img,
+        .container .right .logo img{
+            width: 80px;
+            height: 80px;
+        }
+        .container .right .logo img{
+            margin-top: 20px;
+        }
+        .container .right .logo:first-child img{
+            margin-top: 0;
+        }
+        .container{
+            position: relative;
+            width: 100%;
+            overflow: auto;
+        }
+       .container .left{
+            width: 158px;
+           float: left;
+           display: flex;
+        }
+        .container .left .logo,.container .right .logo{
+            font-size: 0;
+        }
+        .container .center{
+            position: absolute;
+            left: 240px;
+            right: 160px;
+        }
+        .container .right{
+            width: 80px;
+            float: right;
+            font-size: 0;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left">
+        <a class="logo" href="javascript:;"><img src="../img/logo1.jpg"></a>
+        <span class="teamName">团队名称</span>
+    </div>
+    <div class="center">
+        <p>中间一栏自定义，左右固定宽度</p>
+    </div>
+    <div class="right">
+        <a href="javascript:;" class="logo"><img src="../img/logo1.jpg"></a>
+        <a href="javascript:;" class="logo"><img src="../img/logo1.jpg"></a>
+        <a href="javascript:;" class="logo"><img src="../img/logo1.jpg"></a>
+        <a href="javascript:;" class="logo"><img src="../img/logo1.jpg"></a>
+        <a href="javascript:;" class="logo"><img src="../img/logo1.jpg"></a>
+    </div>
+</div>
+</body>
+</html>

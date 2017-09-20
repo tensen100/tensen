@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: absolute;
+        }
+    </style>
+    <script>
+
+        window.onload=drag;
+        function drag() {
+            var box=document.getElementById("box")
+            box.onmousedown=fnDown;//鼠标按下时触发
+        }
+        function fnDown(e) {
+            e=e||window.e;
+            var disX=e.clientX-box.offsetLeft;//光标按下时光标和面板之间的距离
+            var disY=e.clientY-box.offsetTop;
+            //移动面板
+          document.onmousemove =function (e) {//鼠标指针在元素内移动时重复的触发
+               e=e||window.e
+              var box=document.getElementById("box")
+               //document.title=e.clientX+","+e.clientY;//在标题中显示光标的坐标
+              var px=e.clientX-disX;//m面板X轴距离
+              var py=e.clientY-disY;//面板Y轴距离
+
+              var winW=document.documentElement.clientWidth||document.body.clientWidth//浏览器宽
+              var winH=document.documentElement.clientHeight||document.body.clientHeight//浏览器高
+              var maxX=winW-box.offsetWidth;//可以移动的最大X值
+              var maxY=winH-box.offsetWidth;//可以移动的最大Y值
+              //阻止面板移出窗口
+              if(px<0){
+                  px=0;
+              }else if(px>maxX){
+                  px=maxX
+              }
+              if(py<0){
+                  py=0;
+              }else if(py>maxY){
+                  py=maxY
+              }
+              box.style.left=(px)+"px";
+              box.style.top=(py)+"px";
+           }
+            //释放面板
+          document.onmouseup=function(){
+                document.onmousemove=null;
+                document.onmouseup=null;
+            }
+
+        }
+    </script>
+</head>
+<body>
+<div id="box"></div>
+</body>
+</html>

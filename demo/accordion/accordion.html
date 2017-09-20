@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>手风琴</title>
+</head>
+<style>
+    ul,li{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    ul{
+        overflow: auto;
+    }
+    ul:hover .mask{
+        opacity: 0.5;
+    }
+    li{
+        float: left;
+        width: 150px;
+        height: 100px;
+        overflow: hidden;
+        position: relative;
+        transition: all .5s;
+    }
+    li.big{
+        width: 200px;
+    }
+    .mask{
+        position: absolute;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        top: 0;
+        background: #000000;
+        opacity: 0;
+    }
+    li.big .mask{
+        opacity: 0;
+    }
+</style>
+<body>
+<ul id="box">
+    <li  style="background: yellowgreen"><i class="mask"></i></li>
+    <li class="big" style="background: blueviolet"><i class="mask"></i></li>
+    <li style="background: darkgoldenrod"><i class="mask"></i></li>
+    <li style="background: orange"><i class="mask"></i></li>
+    <li style="background: green"><i class="mask"></i></li>
+</ul>
+<script>
+    function init() {
+        var box = document.getElementById("box");
+        var list = box.getElementsByTagName("li");
+        for(var i=0;i<list.length;i++){
+            bind(list[i],"mouseover",mouseoverHandler)
+        }
+    }
+    function bind(el, eventType, callback) {
+        if(typeof el.addEventListener === "function"){
+            el.addEventListener(eventType,callback,false)
+        }else if (typeof el.attachEvent ==="function"){
+            el.attachEvent("on"+eventType,callback);
+        }
+    }
+
+    function mouseoverHandler(e) {
+        var target = e.target || e.srcElement;
+        var box = document.getElementById("box");
+        var list = box.getElementsByTagName("li");
+
+        for(var i=0;i<list.length;i++){
+            list[i].className = list[i].className.replace('big','');
+        }
+        while(target.tagName != "LI" || target.tagName == 'BODY'){
+            target = target.parentNode;
+        }
+        target.className='big'
+    }
+    window.onload = init()
+</script>
+</body>
+</html>

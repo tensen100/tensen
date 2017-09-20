@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>融合效果</title>
+    <link rel="stylesheet" href="css/filter_mix.css">
+</head>
+<body>
+<div class="container">
+    <div class="filter-mix"></div>
+</div>
+
+<div class="container">
+    <div class="fire-container">
+        <div class="fire">
+        </div>
+    </div>
+</div>
+<script>
+    let s = document.createElement("style");
+    let fire = document.querySelector(".fire");
+    fire.style.display = "none";
+    let style = "";
+    for(let i = 0; i<40; i++){
+        let dot = document.createElement("div");
+        dot.className = "dot";
+        fire.appendChild(dot);
+        style += ".dot:nth-child("+(i+1)+"){" +
+            "bottom:"+random(-250,-150)+"px;" +
+            "left:"+random(-200,200)+"px;" +
+            " animation: move "+random(7,26)/10+"s infinite "+random(0,50)/10+"s linear;" +
+            "}"
+    }
+    fire.style.display = "block";
+    s.innerHTML = style;
+    document.head.appendChild(s);
+    function random(min, max) {
+        return min + Math.floor(Math.random() * (max - min));
+    }
+</script>
+
+<div class="container">
+    <div class="text-container">
+        <h1 class="text">Hello World !</h1>
+    </div>
+
+</div>
+</body>
+</html>

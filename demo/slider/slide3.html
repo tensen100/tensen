@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slide3</title>
+    <style>
+        *{margin: 0;padding: 0}
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #container,.sections ,.section{
+            height: 100%;
+            position: relative;
+        }
+        .sections .section:nth-child(1){
+            background: #4F9CC7;
+        }
+        .sections .section:nth-child(2){
+            background: #ff0000;
+        }
+        .sections .section:nth-child(3){
+            background: #f0fcff;
+        }
+        .sections .section:nth-child(4){
+            background: #f58;
+        }
+        .pages{
+            position:fixed;
+            list-style: none;
+        }
+        .vertical.pages{
+            right: 10px;
+            top: 50%;
+        }
+        .horizontal.pages{
+            left: 50%;
+            bottom: 10px;
+        }
+        .pages li{
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+        .horizontal.pages li{
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .pages li.active{
+            width: 14px;
+            height: 14px;
+            border: 2px solid #FFFE00;
+            background: none;
+            margin-left: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div class="sections">
+        <div class="section active">
+            <h3>This is the page one</h3>
+        </div>
+        <div class="section">
+            <h3>This is the page two</h3>
+        </div>
+        <div class="section">
+            <h3>This is the page three</h3>
+        </div>
+        <div class="section">
+            <h3>This is the page four</h3>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+<script type="text/javascript" src="js/slide3.js"></script>
+<script>
+    $("#container").PageSwitch({
+        index : 0,//页面开始的索引
+        easing :"ease", //动画效果
+        duration : 500, //动画执行时间
+        loop : true,//是否可以循环播放
+        pagination : true,//是否进行分页处理
+        keyboard : true,//是否触发键盘事件
+        direction : "horizontal",//滑动方向horizontal
+    })
+</script>
+</body>
+</html>
