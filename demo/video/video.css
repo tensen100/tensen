@@ -11,6 +11,9 @@ body{
   width: 10rem;
   position: relative;
 }
+button:focus{
+  outline: 0 none;
+}
 .box{
   width: 10rem;
   height: 5.625rem;
@@ -31,7 +34,8 @@ body{
   height: 100%;
 }
 
-.video-overlay_play{
+.video-overlay-play{
+  display: none;
   position: absolute;
   z-index: 5;
   left: 0;
@@ -49,7 +53,10 @@ body{
   border-radius: 3px;
   cursor: pointer;
 }
-.video-overlay_play .btn-play{
+.video-overlay-play.show{
+  display: block;
+}
+.video-overlay-play .btn-play{
   position: absolute;
   display: block;
   width: 0;
@@ -64,11 +71,40 @@ body{
   border-left-color: #fff;
 }
 
+.video-overlay-loading{
+  display: none;
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 40px;
+  margin: auto;
+  width: 40px;
+  height: 40px;
+  background: rgba(0,0,0,.65) url(../../../assets/loading.gif) center center no-repeat;
+  -webkit-background-size: 25px 25px;
+  background-size: 25px 25px;
+  border-radius: 2px;
+}
+.video-overlay-loading.show{
+  display: block;
+}
+
+.video-overlay-shadow{
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .video-control{
   position: absolute;
   display: table;
   z-index: 6;
-  bottom: 0;
+  bottom: -40px;
   left: 0;
   width: 100%;
   height: 40px;
@@ -76,6 +112,9 @@ body{
   -webkit-transform: translateZ(0);
   -webkit-transition: bottom .3s ease;
   transition: bottom .3s ease;
+}
+.video-control.show{
+  bottom: 0;
 }
 .video-control-play{
   display: table-cell;
@@ -107,7 +146,7 @@ body{
   font-size: 0;
   color: transparent;
 }
-.video-control-play.play .button .btn-value{
+.video-control-play .button.play .btn-value{
   width: 10px;
   height: 15px;
   border: 0 none;
@@ -139,7 +178,7 @@ body{
   z-index: 2;
   display: block;
 
-  width: 100px;
+  width: 0;
   max-width: 100%!important;
   height: 2px;
   background: #FF9000;

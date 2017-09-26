@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,27 +29,28 @@
     <video id="videoPlayer">
       <source src="http://172.31.102.108:8080/video/test.mp4" type="video/mp4">
     </video>
-    <div class="video-overlay-play">
-      <span class="btn-play"></span>
+    <div class="video-overlay-play show">
+      <span class="btn-play" id="play"></span>
     </div>
+    <div class="video-overlay-loading"></div>
+    <div class="video-overlay-shadow"></div>
     <div class="video-control">
-      <div class="video-control-play play">
-        <button class="button">
+      <div class="video-control-play">
+        <button class="button" id="controlPlay"><!-- play-->
           <span class="btn-value">播放</span>
         </button>
       </div>
       <div class="video-control-bar">
-        <span class="total">
-          <span class="current">
+        <span class="total" #totalBar>
+          <span class="current" [style.width]="currentWidth">
             <span class="handle"></span>
           </span>
         </span>
         <span class="time">
-          <span class="time_current">14:32</span>
+          <span class="time_current"></span>
           <span class="time_split">/</span>
-          <span class="time_total">30:29</span>
+          <span class="time_total"></span>
         </span>
-
       </div>
       <div class="video-control-fullscreen">
         <button class="button">
@@ -61,6 +62,15 @@
 
 </div>
 
+
+<script type="text/javascript" src="video.js"></script>
+<script>
+  var v;
+  window.onload = function () {
+    v = new VideoPlayer();
+  };
+
+</script>
 </body>
 
 
