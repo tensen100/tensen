@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单行居中多行居左，超出两行省略</title>
+    <style>
+        .method1{
+            width: 30em;
+            background: #f5f5f5;
+        }
+        .method1 h2{
+            text-align: center;
+        }
+        .method1 p{
+            display: inline-block;
+            text-align: left;
+            overflow : hidden;
+            text-overflow: ellipsis;
+
+        }
+        .method1 span{
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .method2{
+            width: 30em;
+            background: #f5f5f5;
+        }
+        .method2 *{
+            margin: 0;
+            padding: 0;
+        }
+        .method2 h2{
+            position:relative;
+            line-height:30px;
+            margin: 1em 0;
+        }
+        .method2 p{
+            overflow : hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .method2 .pesudo{
+            position:absolute;
+            width:100%;
+            height:30px;
+            overflow:hidden;
+            top:0;
+            background:#ddd;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+<div class="method1">
+    <h2><p><span>单行居中</span></p></h2>
+    <h2><p><span>两行居左，两行居左，两行居左，两行居左，两行居左，两行居左。</span></p></h2>
+    <h2><p><span>超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略。</span></p></h2>
+</div>
+
+<div class="method2">
+    <h2>
+        <p>单行居中</p>
+        <p class="pesudo">单行居中</p>
+    </h2>
+    <h2>
+        <p>两行居左，两行居左，两行居左，两行居左，两行居左，两行居左。</p>
+        <p class="pesudo">两行居左，两行居左，两行居左，两行居左，两行居左，两行居左。</p>
+    </h2>
+    <h2>
+        <p>超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略。</p>
+        <p class="pesudo">超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略，超过两行省略。</p>
+    </h2>
+</div>
+
+</body>
+</html>
