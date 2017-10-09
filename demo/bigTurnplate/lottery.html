@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>大转盘</title>
+    <style>
+        canvas{
+            display: block;
+            /*width: 100%;*/
+            width: 500px;
+            height: 500px;
+            border:1px solid #4F9CC7;
+            margin: auto;
+            transform: rotate(0deg);
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas">你的设备不支持canvas！</canvas>
+<script>
+    let data = [
+        {
+            name: '一等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '二等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '三等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '四等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '五等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '六等奖',
+            pic:'imgs/iphone.png'
+        },
+    /*    {
+            name: '五等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '六等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '五等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '六等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '五等奖',
+            pic:'imgs/iphone.png'
+        },
+        {
+            name: '六等奖',
+            pic:'imgs/iphone.png'
+        },*/
+
+
+        ]; // 商品数据
+    let t;
+    window.onload = function () {
+        t = new Turnplate(document.getElementById('canvas'));
+        t.render(data);
+    };
+    function Turnplate(canvas) {
+        this.canvas = canvas;
+        this.background = ['#ff5959', '#FFACA9',];
+        this.init()
+    }
+    Turnplate.prototype.init = function () {
+        this.isRotate = false;
+        this.size = this.canvas.offsetWidth * 3;
+        this.canvas.width = this.size;
+        this.canvas.height = this.size;
+        if ( this.canvas.getContext ) {
+            this.ctx = this.canvas.getContext('2d');
+        }
+    };
+
+    /**
+     * 渲染图形
+     */
+    Turnplate.prototype.render = function (data) {
+        this.length = data.length; // 商品数量
+        let length = this.length;
+        let ctx = this.ctx;
+        let background = this.background; // 颜色表
+
+        let outRadius = this.size/2; //外圆半径
+        let outRadius2 = outRadius * 0.9; // 外内圆半径
+        let outMinRadius = outRadius * 0.06 / 2; // 外层小圆半径
+        let outMinPosition = outRadius * 0.95; // 外层小圆位置
+        let outMinLength = 20; // 外层小圆个数
+
+        let radius = outRadius * 0.88; // 圆形半径
+        let angle = Math.PI * 2 / length; // 扇形角度
+
+        let txt_r = radius*0.8; // 文本半径
+        let txt_size = Math.sin(angle/2)*txt_r*2/5; //文本字体大小
+        let img_r = radius*0.69; //图片半径
+        let img_size = Math.sin(angle/2)*img_r*0.9; //图片大小（width）
+
+        ctx.translate(outRadius,outRadius); // 改变绘图中心点
+        //绘制外圆
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = background[0];
+        ctx.arc(0,0,outRadius,0,Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.fillStyle = background[1];
+        ctx.arc(0,0,outRadius2,0,Math.PI * 2);
+        ctx.fill();
+        for (let i =0;i<outMinLength;i++){
+            ctx.rotate(Math.PI * 2 / outMinLength);
+            this.drawOutCircle(outMinPosition,outMinRadius,background[2]);
+        }
+        ctx.restore();
+
+        // 绘制扇形
+        ctx.save();
+        for(let i=0;i<length;i++){
+            this.drawFan(radius, background[i%2], angle);
+            ctx.rotate(angle)
+        }
+        ctx.restore();
+
+        //绘制商品
+        for(let i =0;i<length;i++){
+            let img = new Image();
+            img.src = data[i].pic;
+            img.onload = () => {
+                ctx.save();
+                ctx.rotate((Math.PI * 0.5 - angle/2 - angle*i)%(Math.PI * 2));
+                this.drawInfo(data[i].name,txt_r,txt_size,img,img_r,img_size);
+                ctx.restore()
+            }
+        }
+    };
+
+    /**
+     * 绘制外圆
+     */
+    Turnplate.prototype.drawOutCircle = function (outR,r,color) {
+        let ctx = this.ctx;
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.arc(outR,0,r,0,Math.PI*2);
+        ctx.fill();
+        ctx.closePath();
+
+    };
+
+    /**
+     * 绘制扇形
+     * @param radius 扇形半径
+     * @param color 扇形颜色
+     * @param angle 扇形角度
+     */
+    Turnplate.prototype.drawFan = function (radius,color,angle) {
+        let ctx = this.ctx;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.fillStyle = color;
+        ctx.lineTo(radius,0);
+        ctx.arc(0,0,radius,0,angle);
+        ctx.lineTo(0,0);
+        ctx.closePath();
+        ctx.fill();
+    };
+
+    /**
+     * 绘制商品
+     * @param txt 文本
+     * @param txt_r 文本位置半径
+     * @param txt_s 文本大小
+     * @param img 图片对象
+     * @param img_r 图片位置半径
+     * @param img_s 图片大小
+     */
+    Turnplate.prototype.drawInfo = function (txt,txt_r,txt_s,img,img_r,img_s) {
+        let ctx = this.ctx;
+        let img_w = img.width;
+        let img_h = img.height;
+        ctx.fillStyle = '#ffffff';
+        ctx.font=txt_s + 'px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(txt,0,-txt_r);
+        ctx.drawImage(img,- img_s/2,-img_r,img_s,img_s*img_h/img_w)
+    };
+
+    /**
+     * 旋转到商品位置
+     * @param idx 商品下标
+     */
+    Turnplate.prototype.runTo = function (idx) {
+        if(this.isRotate){
+            return;
+        }
+        this.isRotate = true;
+        let duration = 8;
+        let length = this.length;
+        let angle = 360/length;
+        let total =  270 + angle / 2 + idx * angle;
+        this.canvas.style.transition ='all '+ duration +'s cubic-bezier(.17,1.04,.92,1)';
+        this.canvas.style.transform = 'rotate('+total+'deg)';
+        setTimeout(() =>{
+            this.canvas.style.transition ='';
+            this.isRotate = false;
+        },duration*1000);
+
+    }
+</script>
+
+</body>
+</html>
