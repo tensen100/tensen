@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>多列均匀布局</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        li{
+            display: inline-block;
+            width: 2em;
+            height: 2em;
+            background: #3F51B5;
+            color: #ffffff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 2em;
+        }
+        .method-1{
+
+        }
+        .method-1{
+            text-align: justify;
+            text-align-last: justify;
+        }
+        .method-2{
+            text-align: justify;
+        }
+        .method-2:after{
+            content: "";
+            display: inline-block;
+            position: relative;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<ul class="method-1">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+<ul class="method-2">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+</body>
+</html>

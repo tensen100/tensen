@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三列布局</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .layout{
+            text-align: center;
+            line-height: 2em;
+            margin-top: 1em;
+        }
+        .left{
+            background: #3F51B5;
+        }
+        .center{
+            background: #4F9CC7;
+            min-width: 200px;
+        }
+        .right{
+            background: #ff1493;
+        }
+
+        .float .left{
+            float: left;
+            width: 200px;
+        }
+        .float .right{
+            float: right;
+            width: 200px;
+        }
+
+        .absolute{
+            position: relative;
+        }
+        .absolute>div{
+            position: absolute;
+        }
+        .absolute .left{
+            left: 0;
+            width: 200px;
+        }
+        .absolute .center{
+            left: 200px;
+            right: 200px;
+        }
+        .absolute .right{
+            width: 200px;
+            right: 0;
+        }
+
+        .flex{
+            display: flex;
+            margin-top: 4em;
+        }
+        .flex .left{
+            width: 200px;
+        }
+        .flex .center{
+            flex: 1;
+        }
+        .flex .right{
+            width: 200px;
+        }
+
+        .table{
+            width: 100%;
+            display: table;
+        }
+        .table>div{
+            display: table-cell;
+        }
+        .table .left{
+            width: 200px;
+        }
+        .table .right{
+            width: 200px;
+        }
+        .grid{
+            display: grid;
+            width: 100%;
+            grid-template-rows: 2em;
+            grid-template-columns: 200px auto 200px;
+        }
+    </style>
+</head>
+<body>
+<h1 class="title">中间自适应，左右固定</h1>
+<article class="layout float">
+    <div class="left">200px</div>
+    <div class="right">200px</div>
+    <div class="center">浮动</div>
+</article>
+
+<article class="layout absolute">
+    <div class="left">200px</div>
+    <div class="center">绝对定位</div>
+    <div class="right">200px</div>
+</article>
+
+<article class="layout flex">
+    <div class="left">200px</div>
+    <div class="center">flex</div>
+    <div class="right">200px</div>
+</article>
+
+<article class="layout table">
+    <div class="left">200px</div>
+    <div class="center">表格</div>
+    <div class="right">200px</div>
+</article>
+
+
+<article class="layout grid">
+    <div class="left">200px</div>
+    <div class="center">网格</div>
+    <div class="right">200px</div>
+</article>
+
+
+</body>
+</html>
