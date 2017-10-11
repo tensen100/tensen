@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>一个标签</title>
+    <style>
+        div{
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+        .method-01{
+            background: #ff1493;
+            border:20px dashed #3F51B5;
+        }
+        .method-01:after{
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background: #ffffff;
+        }
+        .method-02{
+            background: #ffffff;
+            background-clip: padding-box;
+            border: 20px dashed #3F51B5;
+        }
+        .method-02:before{
+            content: "";
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: #ff1493;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+<h3>method 1</h3>
+<div class="method-01"></div>
+<h3></h3>
+<div class="method-02"></div>
+</body>
+</html>
