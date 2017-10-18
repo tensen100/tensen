@@ -61,7 +61,7 @@
                 //起始页
                 me.index = (me.settings.index >= 0 && me.settings.index < me.pagesCount) ? me.settings.index :0;
 
-               me.canScroll = true;
+                me.canScroll = true;
 
                 //如果不是纵向布局，初始化布局
                 if(!me.direction){
@@ -116,6 +116,7 @@
                 }
                 me._scrollPage();
             },
+
             /**
              * 主要针对横屏情况进行页面布局
              */
@@ -213,7 +214,7 @@
              * 滑动动画
              */
             _scrollPage : function () {
-                console.log("滑动动画")
+                console.log("滑动动画");
                var me = this,
                    dest = me.section.eq(me.index).position();
                 if(!dest) return ;
