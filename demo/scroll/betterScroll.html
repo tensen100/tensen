@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    <title>betterScroll</title>
+    <!--<link rel="stylesheet" href="../../common/normalize.css">-->
+    <link rel="stylesheet" href="../../common/common.css">
+    <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .header,.footer{
+            width: 100%;
+            height: 1.3rem;
+            background: #4F9CC7;
+            position: absolute;
+            left: 0;
+            line-height: 1.3rem;
+            color: #ffffff;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .header{
+            top: 0;
+        }
+        .content{
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 1.3rem;
+            bottom: 1.3rem;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .footer{
+            bottom: 0;
+        }
+        .list{
+            background: #72b16a;
+        }
+        .list li{
+            width: 100%;
+            height: 2rem;
+        }
+        .list li:nth-child(2n){
+            background: rgba(255,255,255,0.5);
+        }
+        .list li:nth-child(3n){
+            background: rgba(0,0,0,0.5);
+        }
+        .scroll-top,.scroll-bottom{
+            width: 100%;
+            height: 50px;
+            background: #F3F5F7;
+            line-height: 50px;
+            text-align: center;
+            position: absolute;
+            left: 0;
+        }
+        .scroll-top{
+            top:-50px
+        }
+        .scroll-bottom{
+            bottom: -50px;
+        }
+    </style>
+</head>
+<body style="font-size: 12px">
+<script>
+    var setRem = function () {
+        var html = document.getElementsByTagName("html")[0];
+        var width = html.offsetWidth;
+        var rem = 54;
+        if(width < 540){
+            rem = width/10;
+        }
+        html.style.fontSize = rem+"px";
+    };
+    setRem();
+    window.onresize = function () {setRem()}
+</script>
+<header class="header">Header</header>
+<div class="content">
+    <div class="wrapper">
+        <div class="scroll-top">下拉刷新</div>
+        <ul class="list">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <div class="scroll-bottom">上拉加载更多</div>
+    </div>
+
+</div>
+<footer class="footer">Footer</footer>
+
+<script type="text/javascript" src="../../common/bscroll.min.js"></script>
+<script>
+    let wrapper = document.querySelector('.content');
+    let scrollTop = document.querySelector('.scroll-top');
+    let scrollBottom = document.querySelector('.scroll-bottom');
+    let scroll = new BScroll(wrapper,{
+        probeType:2
+    });
+    scroll.on('scroll',function (pos) {
+        if(pos.y > 50){
+            scrollTop.innerText = '释放刷新'
+        } else if (pos.y < (this.maxScrollY - 50)) {
+            scrollBottom.innerText = '释放加载更多'
+        }
+    });
+    scroll.on('touchEnd',function (pos) {
+        console.log(pos.y);
+        if(pos.y > 50) {
+            console.log('开始刷新');
+            setTimeout(function () {
+                console.log('刷新成功');
+                scrollTop.innerText = '下拉刷新'
+            },1500)
+        }else if(pos.y < (this.maxScrollY - 50)) {
+            console.log('开始加载');
+            setTimeout(function () {
+                console.log('加载成功');
+                scrollBottom.innerText = '上拉加载更多'
+            },1500)
+        }
+    })
+</script>
+</body>
+</html>
