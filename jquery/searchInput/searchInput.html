@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>searchInput</title>
+    <link rel="stylesheet" href="../../common/layui.css">
+    <style>
+        .search-input .search-input-tips{
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 38px;
+            line-height: 38px;
+            margin-right: 30px;
+            display: none;
+        }
+        .search-input .layui-badge{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form-item">
+    <label class="layui-form-label">搜索框</label>
+    <div class="layui-input-block">
+        <div id="searchInput" class="search-input layui-form-select">
+            <div class="search-input-title layui-select-title">
+                <input type="text" placeholder="搜索" value="" class="layui-input">
+                <i class="layui-edge"></i>
+            </div>
+            <dl class="search-input-result layui-anim layui-anim-upbit">
+                <dd lay-value="0" class="">北京</dd>
+                <dd lay-value="1" class="">上海</dd>
+                <dd lay-value="2" class="">广州</dd>
+                <dd lay-value="3" class="">深圳</dd>
+                <dd lay-value="4" class="">杭州</dd>
+        </dl>
+            <div class="search-input-tips"></div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript" src="../../common/jquery-2.2.2.min.js"></script>
+<script type="text/javascript" src="searchInput.js"></script>
+<script>
+    (function () {
+        var input = $("#searchInput").SearchInput({
+            defaultValue:["笔记本电脑","IPhone-X","x-box游戏机"],
+            keyChanges:function (key) {
+                var arr = [];
+                if(key.trim()){
+                    for (var i = 0; i <8; i++) {
+                        arr.push(key + (i+1))
+                    }
+                }
+                input.SearchInput('renderKey',arr)
+            },
+            search:function (key) {
+                console.log("开始搜索："+key)
+            }
+        })
+    })()
+</script>
+</body>
+</html>
