@@ -5,82 +5,154 @@
     <title>labelInput</title>
     <link rel="stylesheet" href="../../common/layui/css/layui.css">
     <style>
-        .search-input .search-input-select{
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 38px;
-            line-height: 38px;
-            margin-right: 30px;
-            margin-left: 10px;
-            display: block;
+
+        .label-input .label-input-select{
+            width: 100%;
+            float: right;
+            transition: all 0.3s;
         }
-        .search-input .search-input-select .layui-badge{
+
+        .label-input .label-input-selected-tips{
+            width: 35%;
+            line-height: 38px;
+            float: left;
+            display: none;
+        }
+        .label-input .label-input-selected-tips .my-badge{
+            display: inline-block;
+            padding-left:5px;
             height: 20px;
             line-height: 20px;
+            font-size: 12px;
+            color: #fff;
+            background: #FF5722;
+            border-radius: 10px;
         }
-        .search-input .search-input-select .layui-badge .layui-icon{
+        .label-input .label-input-selected-tips .my-badge .icon{
+            display: block;
+            float: right;
+            height: 20px;
+            width: 20px;
+            margin-left: 5px;
+            line-height: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.3) ;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .label-input .label-input-selected-tips .my-badge .icon:hover{
+            background: rgba(0,0,0,0.5) ;
+        }
+        .label-input .label-input-select .layui-badge .layui-icon{
             vertical-align: middle;
         }
-        .search-input .search-input-tips{
-            height: 38px;
+        .label-input .label-input-default-tips{
             line-height: 38px;
             margin-right: 30px;
             display: block;
         }
-        .search-input .layui-badge{
+        .label-input .layui-badge{
             cursor: pointer;
+        }
+
+        .label-input .handle{
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            line-height: 38px;
+        }
+        .label-input .handle .btn{
+            border:none;
+            background: transparent;
+            color: #ccc;
+            cursor: pointer;
+            transition:all 0.3s;
+            padding: 0.5em;
+            font-size: 1.1em;
+        }
+        .label-input .handle .btn:hover{
+            color: #666;
         }
     </style>
 </head>
 <body>
 <div class="layui-form-item">
-    <label class="layui-form-label">搜索框</label>
-    <div class="layui-input-block">
-        <div id="searchInput" class="search-input">
-            <div class="layui-form-select">
-                <div class="search-input-title layui-select-title">
-                    <input type="text" placeholder="搜索" value="" class="layui-input">
-                    <i class="layui-edge"></i>
-                </div>
-                <dl class="search-input-result layui-anim layui-anim-upbit">
-                    <dd lay-value="0" class="">北京</dd>
-                    <dd lay-value="1" class="">上海</dd>
-                    <dd lay-value="2" class="">广州</dd>
-                    <dd lay-value="3" class="">深圳</dd>
-                    <dd lay-value="4" class="">杭州</dd>
-                </dl>
-                <div class="search-input-select">
-                    <!--<span class='layui-badge layui-bg-orange'>qweqwe<i class="layui-icon">&#x1006;</i></span>
-                    <span class='layui-badge layui-bg-orange'>qweqwe<i class="layui-icon">&#x1006;</i></span>-->
-                </div>
+    <div id="labelInput" class="label-input">
+        <div class="layui-row label-input-main">
+            <!--已选中的标签-->
+            <div class="label-input-selected-tips">
+                <!--<span class='layui-badge layui-bg-orange'>qweqwe<i class="layui-icon">&#x1006;</i></span>-->
             </div>
-            <div class="search-input-tips">
-                <span class='layui-badge layui-bg-gray'>qweqwe</span>
-                <span class='layui-badge layui-bg-gray'>qweqwe</span>
+            <div class="label-input-select">
+                <!--输入框-->
+                <div class="layui-form-select">
+                    <div class="label-input-title layui-select-title">
+                        <input type="text" placeholder="搜索" value="" class="layui-input">
+                        <!--<i class="layui-edge"></i>-->
+                        <div class="handle">
+                            <button class="btn add-btn"><i class="layui-icon">&#xe654;</i></button>
+                            <button class="btn clear-btn"><i class="layui-icon">&#xe640;</i></button>
+                        </div>
+
+                    </div>
+                    <dl class="label-input-result layui-anim layui-anim-upbit">
+                       <!-- <dd lay-value="0" class="">北京</dd>-->
+                    </dl>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="label-input-default-tips">
+            <!--<span class='layui-badge layui-bg-gray'>qweqwe</span>-->
+        </div>
+        </div>
 </div>
 <script type="text/javascript" src="../../common/jquery-2.2.2.min.js"></script>
 <script type="text/javascript" src="labelInput.js"></script>
 <script>
+    var defaultTips = [
+        {
+            id: '001',
+            str: '笔记本电脑'
+        },
+        {
+            id: '001',
+            str: 'IPhone-X'
+        },
+        {
+            id: '001',
+            str:  'x-box游戏机'
+        },
+        {
+            id: '001',
+            str: '洗衣机'
+        },
+        {
+            id: '001',
+            str: '冰箱'
+        }
+    ];
     (function () {
-        var input = $("#searchInput").SearchInput({
-            defaultValue:["笔记本电脑","IPhone-X","x-box游戏机"],
+        var input = $("#labelInput").LabelInput({
+            defaultLabel:defaultTips,
+            labelPath: ['str'], // 配置路径
             keyChanges:function (key) {
                 var arr = [];
                 if(key.trim()){
                     for (var i = 0; i <8; i++) {
-                        arr.push(key + (i+1))
+                        arr.push({
+                            id: '100' + i,
+                            str: key + (i+1)
+                        })
                     }
                 }
                 input.SearchInput('renderKey',arr)
             },
             search:function (key) {
-                console.log("开始搜索："+key)
+                console.log("开始搜索：");
+                console.log(key)
             }
-        })
+        });
     })()
 </script>
 </body>

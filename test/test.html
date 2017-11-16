@@ -3,13 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!--<link rel="stylesheet" href="../common/layui/css/layui.css">-->
 </head>
-<body>
-<input type="text" onchange="change()">
+<body onbeforeunload="leave()">
+
+<!--<script type="text/javascript" src="../common/layui/layui.js"></script>-->
 <script>
-    function change() {
-        console.log(this.value)
-    }
+//   window.onload = function () {
+//       alert("load")
+//   };
+function leave () {
+       alert("123123124");
+       return true;
+   };
+   /*window.onunload = function () {
+       alert("close")
+   };*/
 </script>
 </body>
 </html>
