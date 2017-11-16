@@ -1,0 +1,48 @@
+html{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.game{
+    width: 200px;
+    height: 400px;
+    background: #f2faff;
+    border: 1px solid #0000ff;
+    border-top: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.next{
+    width: 80px;
+    height: 80px;
+    background: #f2faff;
+    position: absolute;
+    top: 10px;
+    left: 250px;
+    border: 1px solid #0000ff;
+}
+.info{
+    position: absolute;
+    top: 100px;
+    left: 250px;
+}
+
+.none, .current, .done{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.none{
+    background: #f2faff;
+}
+.current{
+    background: #ffc0cb;
+    border: 1px solid #ff0000;
+}
+.done {
+    background: #808080;
+    border: 1px solid #000000;
+}
