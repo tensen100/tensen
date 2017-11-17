@@ -1,2 +1,5 @@
+node_modules
 .idea
-
+.project
+.classpath
+.c9

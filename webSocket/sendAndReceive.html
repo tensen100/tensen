@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>webSocket sendAndReceive</title>
+</head>
+<body>
+<h1>webSocket sendAndReceive</h1>
+<input type="text" id="sendInput">
+<button id="send">发送</button>
+<div id="receive">
+</div>
+<script>
+    let websocket = new WebSocket('ws://localhost:3000/');
+    let revEle = document.getElementById('receive');
+    websocket.onopen = function () {
+        console.log('websocket open');
+        revEle.innerHTML = 'websocket connected'
+    };
+    websocket.onclose = function () {
+        console.log('websocket close');
+    };
+    websocket.onmessage = function (e) {
+        console.log(e.data);
+        revEle.innerHTML = e.data;
+    };
+    document.getElementById('send').onclick = function () {
+        let txt = document.getElementById('sendInput').value;
+        websocket.send(txt)
+    }
+</script>
+</body>
+</html>

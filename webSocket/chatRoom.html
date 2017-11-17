@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>webSocket Chat</title>
+</head>
+<body>
+<h1>webSocket ChatRoom</h1>
+<input type="text" id="sendInput">
+<button id="send">发送</button>
+<div id="receive">
+</div>
+<script>
+    let websocket = new WebSocket('ws://localhost:3000/');
+    let revEle = document.getElementById('receive');
+    websocket.onopen = function () {
+        console.log('websocket open');
+        showMsg('websocket connected')
+    };
+    websocket.onclose = function () {
+        console.log('websocket close');
+    };
+    websocket.onmessage = function (e) {
+        console.log(e.data);
+        showMsg(e.data)
+    };
+    document.getElementById('send').onclick = function () {
+        let txt = document.getElementById('sendInput').value;
+        websocket.send(txt)
+    };
+    function showMsg(data) {
+        data = JSON.parse(data);
+        console.log(data)
+        let p = document.createElement("p");
+        p.innerHTML = data.msg;
+        if (data.type === 'enter') {
+            p.style.color = 'green';
+        }else if (data.type === 'leave'){
+            p.style.color = 'red'
+        }
+        revEle.appendChild(p)
+    }
+</script>
+
+</body>
+</html>
