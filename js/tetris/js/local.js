@@ -7,15 +7,16 @@ var Local = function () {
       document.onkeydown = function (e) {
           switch (e.keyCode) {
               case 38: // up
+                  game.rotate();
                   break;
               case 39: // right
-                  game.right();
+                  game.move(1);
                   break;
               case 40:// down
                   game.down();
                   break;
               case 37:// left
-                  game.left();
+                  game.move(-1);
                   break;
               case 32:// space
                   break;

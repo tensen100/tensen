@@ -9,16 +9,37 @@
 
 <!--<script type="text/javascript" src="../common/layui/layui.js"></script>-->
 <script>
-//   window.onload = function () {
-//       alert("load")
-//   };
-function leave () {
-       alert("123123124");
-       return true;
-   };
-   /*window.onunload = function () {
-       alert("close")
-   };*/
+    var squares = [
+        [0x6600],
+        [0x2222, 0x0f00],
+        [0xc600, 0x2640],
+        [0x6c00, 0x4620],
+        [0x4460, 0x2e0, 0x6220, 0x740],
+        [0x2260, 0x0e20, 0x6440, 0x4700],
+        [0x2620, 0x720, 0x2320, 0x2700]
+    ];
+    function transform(data) {
+        let arr = [];
+        let str = data[0].toString(2);
+        let length = str.length;
+        let prev = '';
+        let count =0;
+        for(let i=0;i<16-length;i++){
+            prev += '0'
+        }
+        str = prev+str;
+        for(let i=0;i<4;i++){
+            let row = [];
+            for(let j=0;j<4;j++){
+                count ++;
+                row.push(parseInt(str.charAt(count)))
+            }
+            arr.push(row)
+        }
+        console.log(str)
+        console.log(arr);
+    }
+    transform(squares[6])
 </script>
 </body>
 </html>

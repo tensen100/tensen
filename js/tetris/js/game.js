@@ -88,23 +88,21 @@ var Game = function () {
      * @param x
      * @param y
      */
-    let check = function (pos, x, y) {
-        // console.log(pos);
-        let c;
-        if (pos.x + x < 0 ){
-            c = false;
-        }else if (pos.x + x >= gameData.length){
-            c = false;
-        }else if(pos.y + y < 0){
-            c = false;
-        }else if(pos.y + y >= gameData[0].length){
-            c = false;
-        }else if(gameData[pos.x + x][pos.y + y] === 1){
-            c = false;
-        }else {
-            c = true;
+    let check = function (pos) {
+        for(let i = 0,length = cur.data.length; i <length; i++){
+            for( let j = 0 ,length2 = cur.data[i].length; j < length2; j++){
+                if(cur.data[i][j]){
+                    if (pos.y + i < 0 ||
+                        pos.y + i >= gameData.length ||
+                        pos.x + j < 0 ||
+                        pos.x + j >= gameData[0].length ||
+                        gameData[pos.y + i][pos.x + j] === 1 ){
+                        return false;
+                    }
+                }
+            }
         }
-        return c;
+        return true;
     };
 
     /**
@@ -113,8 +111,8 @@ var Game = function () {
     let setData = function () {
         cur.data.forEach( (row ,i) => {
             row.forEach( (n ,j) => {
-                if(check(cur.origin, i, j)){
-                    gameData[cur.origin.x + i][cur.origin.y + j] = n;
+                if(n){
+                    gameData[cur.origin.y + i][cur.origin.x + j] = n;
                 }
             })
         });
@@ -124,12 +122,11 @@ var Game = function () {
      * 清理数据
      */
     let clearData = function () {
-        gameData.forEach( (row, i) => {
+        cur.data.forEach( (row, i) => {
             row.forEach((v, j)=>{
-                gameData[i][j]=0;
-                /*if(check(cur.origin, i, j)){
-
-                }*/
+                if(v){
+                    gameData[cur.origin.y + i][cur.origin.x + j]=0;
+                }
             })
         })
     };
@@ -139,25 +136,40 @@ var Game = function () {
      */
     let down = function () {
         console.log('down');
-        cur.origin.x ++;
-        clearData();
-        setData();
-        refreshDiv(gameData, gameDivs)
+        let nextOrigin = {
+            x: cur.origin.x,
+            y: cur.origin.y+1
+        };
+        if( check(nextOrigin)){
+            clearData();
+            cur.origin = nextOrigin;
+            setData();
+            refreshDiv(gameData, gameDivs)
+        }
     };
 
     /**
-     * 左移动
+     * 左右移动
+     * @param n:-1 left,1 right
      */
-    let left = function () {
+    let move = function (n) {
         console.log('left');
+        let nextOrigin = {
+            x: cur.origin.x + n,
+            y: cur.origin.y
+        };
+        if( check(nextOrigin)){
+            clearData();
+            cur.origin = nextOrigin;
+            setData();
+            refreshDiv(gameData, gameDivs)
+        }
     };
 
-    /**
-     * 右移
-     */
-    let right = function () {
-        console.log('right');
+    let rotate = function () {
+        console.log('rotate')
     };
+
     /**
      * 初始化
      * @param doms
@@ -169,8 +181,8 @@ var Game = function () {
          next = new Square();
          initDiv(gameDiv, gameDivs, gameData);
          initDiv(nextDiv, nextDivs, nextData);
-         cur.origin.x = 10;
-         cur.origin.y = 5;
+         cur.origin.x = 1;
+         cur.origin.y = 2;
          setData();
          refreshDiv(gameData, gameDivs);
          refreshDiv(next.data, nextDivs)
@@ -179,6 +191,6 @@ var Game = function () {
      // 导出
      this.init = init;
      this.down = down;
-     this.left = left;
-     this.right = right;
+     this.move = move;
+     this.rotate = rotate;
 };
