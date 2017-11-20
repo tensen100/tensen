@@ -31,12 +31,12 @@
         for(let i=0;i<4;i++){
             let row = [];
             for(let j=0;j<4;j++){
+                row.push(parseInt(str.charAt(count)));
                 count ++;
-                row.push(parseInt(str.charAt(count)))
             }
             arr.push(row)
         }
-        console.log(str)
+        console.log(str);
         console.log(arr);
     }
     transform(squares[6])

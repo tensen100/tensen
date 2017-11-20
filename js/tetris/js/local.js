@@ -19,6 +19,7 @@ var Local = function () {
                   game.move(-1);
                   break;
               case 32:// space
+                  game.fall()
                   break;
           }
       }  
