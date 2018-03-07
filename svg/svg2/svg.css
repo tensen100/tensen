@@ -1,0 +1,217 @@
+body {
+  background: #988185;
+  background-image: linear-gradient(40deg, rgba(70, 57, 60, 0.05), rgba(128, 0, 21, 0.05)), linear-gradient(135deg, #796366 0%, #796366 10%, #8c7377 11%, #8c7377 40%, #a38f92 41%, #a38f92 50%, #796366 51%, #796366 60%, #8c7377 61%, #8c7377 90%, #a38f92 91%);
+  background-size: 7px 7px, 4px 4px;
+  font-family: Arial;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-blend-mode: hard-light, multiply;
+  overflow: hidden;
+}
+
+
+.play path:nth-child(1) {
+  stroke-dasharray: 229;
+  stroke-dashoffset: 229;
+  animation-duration: 750.153ms;
+  animation-delay: 0ms; }
+
+.play path:nth-child(2) {
+  stroke-dasharray: 86;
+  stroke-dashoffset: 86;
+  animation-duration: 255.81ms;
+  animation-delay: 755.505ms; }
+
+.play path:nth-child(3) {
+  stroke-dasharray: 85;
+  stroke-dashoffset: 85;
+  animation-duration: 246.483ms;
+  animation-delay: 1007.34ms; }
+
+.play path:nth-child(4) {
+  stroke-dasharray: 707;
+  stroke-dashoffset: 707;
+  animation-duration: 2503.67ms;
+  animation-delay: 1249.85ms; }
+
+.play path:nth-child(5) {
+  stroke-dasharray: 19;
+  stroke-dashoffset: 19;
+  animation-duration: 253.945ms;
+  animation-delay: 3760.73ms; }
+
+.play path:nth-child(6) {
+  stroke-dasharray: 17;
+  stroke-dashoffset: 17;
+  animation-duration: 267.376ms;
+  animation-delay: 3989.06ms; }
+
+.play path:nth-child(7) {
+  stroke-dasharray: 53;
+  stroke-dashoffset: 53;
+  animation-duration: 253.945ms;
+  animation-delay: 4244.26ms; }
+
+.play path:nth-child(8) {
+  stroke-dasharray: 7;
+  stroke-dashoffset: 7;
+  animation-duration: 267.376ms;
+  animation-delay: 4499.45ms; }
+
+.play path:nth-child(9) {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation-duration: 275.435ms;
+  animation-delay: 4754.64ms; }
+
+.play path:nth-child(10) {
+  stroke-dasharray: 44;
+  stroke-dashoffset: 44;
+  animation-duration: 259.317ms;
+  animation-delay: 5012.52ms; }
+
+.play path:nth-child(11) {
+  stroke-dasharray: 53;
+  stroke-dashoffset: 53;
+  animation-duration: 239.977ms;
+  animation-delay: 5270.4ms; }
+
+.play path:nth-child(12) {
+  stroke-dasharray: 7;
+  stroke-dashoffset: 7;
+  animation-duration: 259.317ms;
+  animation-delay: 5512.16ms; }
+
+.play path:nth-child(13) {
+  stroke-dasharray: 35;
+  stroke-dashoffset: 35;
+  animation-duration: 259.317ms;
+  animation-delay: 5753.92ms; }
+
+.play path:nth-child(14) {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  animation-duration: 259.317ms;
+  animation-delay: 5995.68ms; }
+
+.play path:nth-child(15) {
+  stroke-dasharray: 49;
+  stroke-dashoffset: 49;
+  animation-duration: 259.317ms;
+  animation-delay: 6253.56ms; }
+
+.play path:nth-child(16) {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  animation-duration: 259.317ms;
+  animation-delay: 6498.55ms; }
+
+.play path {
+  animation: dash 2s linear both; }
+  .play path:nth-child(1) {
+    animation-duration: 750.153ms;
+    animation-delay: 0ms; }
+  .play path:nth-child(2) {
+    animation-duration: 255.81ms;
+    animation-delay: 755.505ms; }
+  .play path:nth-child(3) {
+    animation-duration: 246.483ms;
+    animation-delay: 1007.34ms; }
+  .play path:nth-child(4) {
+    animation-duration: 2503.67ms;
+    animation-delay: 1249.85ms; }
+  .play path:nth-child(5) {
+    animation-duration: 253.945ms;
+    animation-delay: 3760.73ms; }
+  .play path:nth-child(6) {
+    animation-duration: 267.376ms;
+    animation-delay: 3989.06ms; }
+  .play path:nth-child(7) {
+    animation-duration: 253.945ms;
+    animation-delay: 4244.26ms; }
+  .play path:nth-child(8) {
+    animation-duration: 267.376ms;
+    animation-delay: 4499.45ms; }
+  .play path:nth-child(9) {
+    animation-duration: 275.435ms;
+    animation-delay: 4754.64ms; }
+  .play path:nth-child(10) {
+    animation-duration: 259.317ms;
+    animation-delay: 5012.52ms; }
+  .play path:nth-child(11) {
+    animation-duration: 239.977ms;
+    animation-delay: 5270.4ms; }
+  .play path:nth-child(12) {
+    animation-duration: 259.317ms;
+    animation-delay: 5512.16ms; }
+  .play path:nth-child(13) {
+    animation-duration: 259.317ms;
+    animation-delay: 5753.92ms; }
+  .play path:nth-child(14) {
+    animation-duration: 259.317ms;
+    animation-delay: 5995.68ms; }
+  .play path:nth-child(15) {
+    animation-duration: 259.317ms;
+    animation-delay: 6253.56ms; }
+  .play path:nth-child(16) {
+    animation-duration: 259.317ms;
+    animation-delay: 6498.55ms; }
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0; } }
+
+ul {
+  display: none; }
+
+button {
+  color: #FC4D04;
+  background: transparent;
+  border: 2px solid currentcolor;
+  position: relative;
+  margin: 1em 2rem;
+  padding: 0.5em 1em;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  font-family: comfortaa;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer; }
+
+button:before, button:after {
+  content: '';
+  display: block;
+  position: absolute;
+  border-color: currentcolor;
+  box-sizing: border-box;
+  border-style: solid;
+  width: 1em;
+  height: 1em;
+  transition: all 0.3s ease-in-out; }
+
+button:before {
+  top: -6px;
+  left: -6px;
+  border-width: 2px 0 0 2px;
+  z-index: 5; }
+
+button:after {
+  bottom: -6px;
+  right: -6px;
+  border-width: 0 2px 2px 0; }
+
+button:hover:before, button:hover:after {
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  border-color: #fff; }
+
+button:hover {
+  color: #353535;
+  background-color: #fff; }
+
+button:active, button:focus {
+  outline: none; }

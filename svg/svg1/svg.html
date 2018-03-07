@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>svg</title>
+    <style>
+        body{
+            font-family: Arial;
+            color: #ecf0f1;
+            background: #2c3e50;
+        }
+        .box{
+            width: 300px;
+            height: 460px;
+            margin: auto;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,1);
+            box-shadow: inset 0 0 0 3px #2c3e50;
+            transition: background .4s .5s;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .box:hover{
+            background: rgba(255,255,255,0);
+            transition-delay: 0s;
+        }
+
+        .box h3 {
+            font-family: cursive;
+            font-size: 180px;
+            line-height: 370px;
+            margin: 0;
+            font-weight: 400;
+            width: 100%;
+        }
+        .box span{
+            display: block;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+            padding: 5px;
+        }
+        .box span,
+        .box h3{
+            transition: color .4s .5s;
+        }
+        .box:hover h3,
+        .box:hover span{
+            color: #fff;
+            transition-delay: 0s;
+        }
+
+        .box svg{
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .box svg line{
+            stroke-width: 3;
+            stroke: #ecf0f1;
+            fill: none;
+            transition: all .8s ease-in-out;
+        }
+        .box:hover line{
+            transition-delay: .1s;
+        }
+        .box svg line.top,
+        .box svg line.bottom{
+            stroke-dasharray: 330 240;
+        }
+        .box svg line.left,
+        .box svg line.right{
+            stroke-dasharray: 490 400;
+        }
+        .box:hover svg line.top{
+            transform: translateX(-600px);
+        }
+        .box:hover svg line.bottom{
+            transform: translateX(600px);
+        }
+        .box:hover svg line.left{
+            transform: translateY(920px);
+        }
+        .box:hover svg line.right{
+            transform: translateY(-920px);
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <svg width="100%" height="100%">
+        <line class="top" x1="0" y1="0" x2="900" y2="0"></line>
+        <line class="left" x1="0" y1="460" x2="0" y2="-920"></line>
+        <line class="bottom" x1="300" y1="460" x2="-600" y2="460"></line>
+        <line class="right" x1="300" y1="0" x2="300" y2="1380"></line>
+    </svg>
+    <h3>D</h3>
+    <span>2018</span>
+    <span>China ChongQin</span>
+</div>
+</body>
+</html>
