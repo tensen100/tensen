@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文本渐变填充</title>
+    <style>
+        .box{
+            width: 800px;
+            margin: 0 auto;
+            background: #c6d4ff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .title{
+            text-align: center;
+        }
+        span{
+            background-image: linear-gradient(135deg, #ff020a, #0006ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+            color: transparent;
+            font-size: 2em;
+            line-height: 1.5em;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2 class="title"><span>念奴娇·赤壁怀古</span></h2>
+    <h3 class="title"><span>苏轼</span></h3>
+    <p>
+       <span>大江东去，浪淘尽，千古风流人物。故垒西边，人道是，三国周郎赤壁。乱石穿空，惊涛拍岸，卷起千堆雪。江山如画，一时多少豪杰。遥想公瑾当年，小乔初嫁了，雄姿英发。羽扇纶巾，谈笑间，樯橹灰飞烟灭。故国神游，多情应笑我，早生华发。人生如梦，一尊还酹江月。</span>
+    </p>
+
+</div>
+</body>
+</html>

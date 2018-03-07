@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3DCube</title>
+    <style>
+        @keyframes spin {
+
+            from{transform: rotateX(-33.5deg) rotateY(45deg);}
+            to{transform: rotateX(-33.5deg) rotateY(-315deg);}
+        }
+        .stage{
+            width: 100%;
+            height: 400px;
+            float: left;
+            margin: 15px auto;
+            position: relative;
+            background: #f5f5f5;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+        .container{
+            width: 100%;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            margin: -100px 0 0 -100px;
+            position: absolute;
+            transform-origin: 100px 100px;
+            transform: rotateX(-33.5deg) rotateY(45deg);
+            transform-style: preserve-3d;
+        }
+        .container:hover{
+            animation: spin 5s linear infinite;
+        }
+        .slide {
+            /*background: rgba(142, 198,63,0.3) ;*/
+            height: 200px;
+            width: 200px;
+            position: absolute;
+            /*background: radial-gradient(transparent 30%,rgba(142, 198,63,.2) 100%)*/
+            background: radial-gradient(transparent 30%,rgba(83, 109, 46, 0.71) 100%);
+        }
+        .slide:after{
+            content: "";
+            display: block;
+            position: absolute;
+            height: 200px;
+            width: 200px;
+            backface-visibility: hidden;
+            background-color: rgba(142, 198,63,.5);
+        }
+        .front{
+            transform: translateZ(100px);
+        }
+        .back{
+            transform: rotateX(180deg) translateZ(100px);
+        }
+        .left{
+            transform: rotateY(-90deg) translateZ(100px);
+        }
+        .right{
+            transform: rotateY(90deg) translateZ(100px);
+        }
+        .top{
+            transform: rotateX(90deg) translateZ(100px);
+        }
+        .bottom{
+            transform: rotateX(-90deg) translateZ(100px);
+        }
+    </style>
+</head>
+<body>
+<div class="stage">
+    <div class="container">
+        <div class="slide front"></div>
+        <div class="slide back"></div>
+        <div class="slide left"></div>
+        <div class="slide right"></div>
+        <div class="slide top"></div>
+        <div class="slide bottom"></div>
+    </div>
+</div>
+</body>
+</html>
