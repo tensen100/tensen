@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>雨滴效果</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .container{
+            position: relative;
+            width: 100vw;
+            height: 100vh ;
+            overflow: hidden;
+        }
+        .window{
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: url("../../images/10.jpg");
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px);
+        }
+        .raindrop{
+            position: absolute;
+            left: 50vw;
+            top: 50vh;
+            width: 15px;
+            height: 17px;
+            border-radius: 100%;
+            background: url("../../images/10.jpg");
+            background-size: 2.5vw 2.5vh;
+            transform: rotate(180deg);
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="window"></div>
+    <div class="raindrops">
+        <div class="borders">
+            <div class="border"></div>
+        </div>
+        <div class="drops">
+            <div class="raindrop"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

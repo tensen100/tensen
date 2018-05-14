@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+    <style type="text/css">
+        *{
+            padding: 0 0;
+            margin: 0 0;
+        }
+        img{
+            width: 100%;
+            display: block;
+            border: none;
+        }
+        ul,li{
+            list-style: none;
+        }
+        .carousel{
+            margin: 100px auto;
+            width: 560px;
+            height: 300px;
+            position: relative;
+            perspective: 3000px;
+            transform-style: preserve-3d;
+            transition: all 2s;
+        }
+        .carousel .carousel-list{
+            perspective: 300px;
+        }
+        .carousel .carousel-list .carousel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 2s 0s;
+            display: none;
+        }
+        .carousel .carousel-list .carousel-item.trans{
+            display: block;
+            opacity: 0;
+        }
+        .carousel .carousel-list .carousel-item.prev{
+            display: block;
+            transform: rotateY(20deg) scale(0.8) translateZ(-100px) translateX(-160px);
+            z-index: 10;
+        }
+        .carousel .carousel-list .carousel-item.cur{
+            display: block;
+            transform:  scale(0.9);z-index: 20;
+        }
+        .carousel .carousel-list .carousel-item.next{
+            display: block;
+            transform: rotateY(-20deg) scale(0.8) translateZ(-100px) translateX(160px);
+            z-index: 10;
+
+        }
+
+    </style>
+</head>
+<body>
+<button id="prev">Prev</button>
+<button id="next">Next</button>
+<div class="carousel">
+    <ul class="carousel-list">
+        <li class="carousel-item no1"><img src="../../images/1.jpg"/></li>
+        <li class="carousel-item no2"><img src="../../images/2.jpg"/></li>
+        <li class="carousel-item no3"><img src="../../images/3.jpg"/></li>
+        <li class="carousel-item no4"><img src="../../images/6.jpg"/></li>
+        <li class="carousel-item no5"><img src="../../images/5.jpg"/></li>
+    </ul>
+</div>
+<script type="text/javascript" src="../util/util.js"></script>
+<script type="text/javascript">
+
+    window.onload=function(){
+        const ul=document.querySelector(".carousel-list");
+        const list=ul.getElementsByTagName("li");
+        const prevBtn=document.getElementById("prev");
+        const nextBtn=document.getElementById("next");
+        let lock=true;
+        
+        function init() {
+            addClass(list[0], 'cur');
+            addClass(list[1], 'next');
+            addClass(list[list.length-1], 'prev')
+        }
+        function prev() {
+            const tem = list[0].className;
+            const length = list.length;
+            for(let i = 0; i< length-1; i++){
+                list[i].className = list[i+1].className
+            }
+            list[length-1].className = tem;
+        }
+        function next() {
+            const length = list.length;
+            const tem = list[length-1].className;
+            for(let i = length-1; i> 0; i--){
+                list[i].className = list[i-1].className
+            }
+            list[0].className = tem;
+        }
+        init();
+        prevBtn.onclick = function(){
+            if(lock===true){
+                prev();
+                lock=false;
+                setTimeout(function(){
+                    lock=true;
+                },1200);
+            }
+        };
+        nextBtn.onclick = function () {
+            if(lock===true){
+                next();
+                lock=false;
+                setTimeout(function(){
+                    lock=true;
+                },1200);
+            }
+        }
+    }
+</script>
+</body>
+</html>

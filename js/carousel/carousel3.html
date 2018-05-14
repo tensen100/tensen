@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+    <link rel="stylesheet" href="carousel3.css">
+</head>
+<body>
+<div class="carousel">
+    <ul class="carousel-list">
+        <li><img src="../../images/4.jpg"></li>
+        <li><img src="../../images/5.jpg"></li>
+        <li><img src="../../images/6.jpg"></li>
+        <li><img src="../../images/7.jpg"></li>
+        <li><img src="../../images/8.jpg"></li>
+        <li><img src="../../images/9.jpg"></li>
+        <li><img src="../../images/10.jpg"></li>
+        <li><img src="../../images/11.jpg"></li>
+    </ul>
+</div>
+<button class="prev">Prev</button>
+<button class="next">Next</button>
+<script type="text/javascript" src="../util/util.js"></script>
+<script>
+    function Carousel(option) {
+        this.wrapper = document.querySelector(option.wrapper);
+        this.content = document.querySelector(option.content);
+        this.list = this.content.querySelectorAll('li');
+        this.nextBtn = document.querySelector(option.next);
+        this.prevBtn = document.querySelector(option.prev);
+        this.animation = option.animation;
+        this.init();
+    }
+    Carousel.prototype = {
+        init: function () {
+            const _this = this;
+            _this.index = 0; // 当前显示页数
+            _this.length = _this.list.length; // 总页数
+            _this.width = this.wrapper.offsetWidth;
+            _this.height = this.wrapper.offsetHeight;
+            _this.list[_this.index].style.display = 'block'; // 默认显示第一页
+            _this.bind();
+        },
+        show: function(cur,next,animation) {
+            const _this = this;
+            const row = _this.animation.row;
+            const col = _this.animation.col;
+            const containerWidth = _this.width;
+            const containerHeight = _this.height;
+            const width = containerWidth/col;
+            const height = containerHeight/row;
+            const px = 'px';
+            const cloneContainer = document.createElement('div');
+            cloneContainer.className = 'clone';
+            cloneContainer.width = containerWidth + px;
+            cloneContainer.height = containerHeight + px;
+            for(let r = 0 ; r < row; r++){ // 行
+                for(let c = 0; c < col; c++) { // 列
+                    const curClone = cur.cloneNode(true);
+                    const nextClone = next.cloneNode(true);
+                    const cloneStyle = {
+                        display: 'block',
+                        width: containerWidth + px,
+                        height: containerHeight + px,
+                        left: -c * width + px,
+                        top: -r * height + px
+                    };
+                    _this.style(curClone,cloneStyle);
+                    _this.style(nextClone,cloneStyle);
+
+                    const cloneItem = document.createElement('div');
+                    cloneItem.className = 'clone-item';
+                    _this.style(cloneItem,{
+                        width: width + px,
+                        height: height + px,
+                        left: c * width + px,
+                        top: r * height + px
+                    });
+
+                    const curContent = document.createElement('div');
+                    curContent.className = 'clone-content cur';
+                    curContent.appendChild(curClone);
+                    const nextContent = document.createElement('div');
+                    nextContent.className = 'clone-content next';
+                    nextContent.appendChild(nextClone);
+
+                    const anim = animation[r][c];
+                    const timing = anim.timing ? ' ' + anim.timing : '' ;
+                    const delay = anim.delay ? ' ' + anim.delay+ 'ms' : '';
+                    const animStr = anim.name + ' '+ _this.animation.duration + 'ms' + timing + delay;
+                    let animEle = cloneItem;
+                    switch (anim.el) {
+                        case CUR:
+                            animEle = curContent;
+                            break;
+                        case NEXT:
+                            animEle = nextContent;
+                            break;
+                        default:
+                            break;
+                    }
+                    animEle.style.animation = animStr;
+                    animEle.style.zIndex = 1;
+                    _this.addClass(animEle,anim.name);
+                    cloneItem.appendChild(curContent);
+                    cloneItem.appendChild(nextContent);
+                    cloneContainer.appendChild(cloneItem);
+                    setTimeout(()=>{
+                        _this.addClass(animEle,'after');
+                    },(anim.delay || 0) + _this.animation.duration)
+                }
+            }
+            if (_this.cloneEle) {
+                _this.cloneEle.remove()
+            }
+            _this.cloneEle = cloneContainer;
+            // setTimeout(()=>{_this.cloneEle.remove()},_this.animation.duration);
+            _this.wrapper.appendChild(cloneContainer)
+        },
+        bind: function() {
+            const _this = this;
+            _this.nextBtn.onclick = function(){
+                _this.next();
+            };
+            _this.prevBtn.onclick = function(){
+                _this.prev();
+            };
+        },
+        /**
+         * 上一页
+         */
+        prev: function () {
+            const _this = this;
+            const idx = _this.index === 0 ?_this.length-1 : _this.index-1;
+            this.skip(idx,_this.animation.prev)
+        },
+        /**
+         * 下一页
+         */
+        next: function () {
+            const  _this = this;
+            const idx = _this.index === _this.length-1 ? 0 : _this.index+1 ;
+            _this.skip(idx,_this.animation.next)
+        },
+        skip: function (idx,animation) {
+            const _this = this;
+            const next = _this.list[idx]; //下一页
+            const cur = _this.list[_this.index]; // 当前页
+            _this.show(cur,next,animation);
+            for(let i = 0,el;el = _this.list[i++];) {
+                el.style.display = 'none'
+            }
+            _this.list[idx].style.display = 'block';
+            _this.index = idx;
+        },
+        style: function (el, style) {
+            for (let i in style) {
+                el.style[i] = style[i]
+            }
+        },
+        addClass: function (el, className) {
+            const classList = el.className.split(' ');
+            if (classList.includes(className)) {
+                return ;
+            }
+            classList.push(className);
+            el.className = classList.join(' ')
+        },
+        removeClass: function (el, className) {
+            const classList = el.className.split(' ');
+            const idx = classList.indexOf(className);
+            if (idx > -1) {
+                classList.splice(idx,1)
+            }
+            el.className = classList.join(' ')
+        }
+    };
+    const CUR = 'cur';
+    const NEXT = 'next';
+    const PARENT = 'parent';
+    const animation1 = {
+        row: 2,
+        col: 2,
+        duration: 1000,
+        prev: [
+            [
+                {
+                    el: NEXT,
+                    name:'inLeft'
+                },
+                {
+                    el: NEXT,
+                    name:'inTop'
+                }
+            ],
+            [
+                {
+                    el: NEXT,
+                    name:'inBottom'
+                },
+                {
+                    el: NEXT,
+                    name:'inRight'
+                }
+            ]
+        ],
+        next: [
+            [
+                {
+                    el: CUR,
+                    name: 'outRight',
+                },
+                {
+                    el: CUR,
+                    name: 'outBottom'
+                }
+            ],
+            [
+                {
+                    el: CUR,
+                    name:'outTop'
+                },
+                {
+                    el: CUR,
+                    name:'outLeft'
+                }
+            ]
+        ],
+    };
+    const animation2 = {
+        row: 1,
+        col: 4,
+        duration: 1000,
+        prev: [
+            [
+                {
+                    el: NEXT,
+                    name:'inTop'
+                },
+                {
+                    el: NEXT,
+                    name:'inBottom'
+                },
+                {
+                    el: NEXT,
+                    name:'inTop'
+                },
+                {
+                    el: NEXT,
+                    name:'inBottom'
+                },
+            ]
+        ],
+        next: [
+            [
+                {
+                    el: CUR,
+                    name:'outTop'
+                },
+                {
+                    el: CUR,
+                    name: 'outBottom'
+                },
+                {
+                    el: CUR,
+                    name:'outTop'
+                },
+                {
+                    el: CUR,
+                    name: 'outBottom'
+                },
+
+            ]
+        ],
+    };
+    const animation3 = {
+        row: 4,
+        col: 1,
+        duration: 1000,
+        prev: [
+            [
+                {
+                    el: NEXT,
+                    name:'inLeft'
+                },
+            ],
+            [
+                {
+                    el: NEXT,
+                    name:'inRight'
+                }
+            ],
+            [
+                {
+                    el: NEXT,
+                    name:'inLeft'
+                },
+            ],
+            [
+                {
+                    el: NEXT,
+                    name:'inRight'
+                }
+            ]
+        ],
+        next: [
+            [
+                {
+                    el: CUR,
+                    name:'outLeft'
+                }
+            ],
+            [
+                {
+                    el: CUR,
+                    name: 'outRight',
+                },
+            ],
+            [
+                {
+                    el: CUR,
+                    name:'outLeft'
+                }
+            ],
+            [
+                {
+                    el: CUR,
+                    name: 'outRight',
+                },
+            ],
+
+        ],
+    };
+    const animation4 = {
+        row: 4,
+        col: 1,
+        duration: 1000,
+        prev: [
+            [
+                {
+                    el: NEXT,
+                    name:'inLeft',
+                },
+            ],
+            [
+                {
+                    el: NEXT,
+                    name:'inLeft',
+                    delay: 500
+                },
+            ],
+            [
+                {
+                    el: NEXT,
+                    name:'inLeft',
+                    delay: 1000
+                },
+            ],
+            [
+                {
+                    el: NEXT,
+                    name:'inLeft',
+                    delay: 1500
+                },
+            ],
+
+        ],
+        next: [
+            [
+                {
+                    el: CUR,
+                    name:'outLeft'
+                }
+            ],
+            [
+                {
+                    el: CUR,
+                    name: 'outRight',
+                },
+            ],
+            [
+                {
+                    el: CUR,
+                    name:'outLeft'
+                }
+            ],
+            [
+                {
+                    el: CUR,
+                    name: 'outRight',
+                },
+            ],
+
+        ],
+    };
+    const animationRoute2D = [['roteXLeft','roteXLeft'],['roteXLeft','roteXLeft']];
+    var carousel = new Carousel({
+        wrapper: '.carousel',
+        content: '.carousel-list',
+        next: '.next',
+        prev: '.prev',
+        clone: '.clone',
+        animation: animation4,
+    });
+    console.log(carousel)
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>惯性滚动</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        ul,li{
+            list-style: none;
+        }
+        .scroll{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .scroll ul li{
+            height: 100px;
+            background: #5FB878;
+        }
+        .scroll ul li:nth-child(2n){
+            background: #2D93CA;
+        }
+    </style>
+</head>
+<body>
+<div id="scroll" class="scroll">
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+
+    </ul>
+</div>
+<script>
+    function MyScroll(id) {
+        this.container = document.querySelector(id);
+        this.content = [].filter.call(this.container.childNodes, n => n.nodeType === 1)[0];
+
+        // 用于垂直滚动的变量
+        this.startPageY = 0; // 触摸开始位置
+        this.lastPageY = 0; //上一次滚动位置
+
+        // 用于阻力回弹的变量
+        this.scrollerHeight = this.content.clientHeight - this.container.clientHeight; // scroller高度
+
+        // 用于惯性运动的变量
+        this.lastMoveStart = 0; // 最后移动开始位置
+        this.lastMoveTime = 0; // 最后移动开始时间
+
+        this.bind();
+    }
+    MyScroll.prototype = {
+        bind: function () {
+            const self = this;
+            const touchStart = (e) => {
+                const pageY = e.touches[0].pageY;
+                self.startPageY = pageY; // 记录触摸开始的位置
+
+                const transform = getComputedStyle(this.content).getPropertyValue('transform');
+                const y = transform.slice(transform.indexOf('(')+1,transform.indexOf(')'))
+                self.lastPageY = parseFloat(y.split(', ')[5]) || 0;
+                self.browserVendor('transform', 'translateY('+self.lastPageY+'px)')
+                self.browserVendor('transition', 'none'); // 清除过度动画
+
+                // 惯性运动
+                self.lastMoveStart = pageY;
+                self.lastMoveTime = self.getTime();
+            };
+            const touchMove = (e) => {
+                const pageY = e.touches[0].pageY;
+                const moveDistance = pageY - self.startPageY; // 手指移动的距离
+                let scrollTo = moveDistance + self.lastPageY; // 滚动位置 上次滚动的位置+手指移动距离
+
+                // 边缘阻力
+                if(scrollTo > 0) {
+                    scrollTo /= 3;
+                }else if (Math.abs(scrollTo) > Math.abs(self.scrollerHeight)) {
+                    scrollTo = -(Math.abs(scrollTo)-self.scrollerHeight)/3 - self.scrollerHeight
+                }
+
+                self.browserVendor('transform', 'translateY(' + scrollTo + 'px)');
+
+
+                // 惯性运动
+                const nowTime = self.getTime();
+                if(nowTime - self.lastMoveTime > 300) {
+                    self.lastMoveTime = nowTime;
+                    self.lastMoveStart = pageY;
+                }
+            };
+            const touchEnd = (e) => {
+                const pageY = e.changedTouches[0].pageY;
+                const moveY = pageY - self.startPageY; // 本次滚动偏移位置
+                self.lastPageY += moveY; // 记录总偏移位置
+
+
+                if (self.lastPageY >0 || Math.abs(self.lastPageY)> Math.abs(self.scrollerHeight)) {
+                    //  回弹
+                    if (self.lastPageY > 0) {
+                        self.lastPageY = 0;
+                    } else if (Math.abs(self.lastPageY) > Math.abs(self.scrollerHeight)) {
+                        self.lastPageY = -self.scrollerHeight;
+                    }
+                    self.browserVendor('transition','all 500ms cubic-bezier(0.165, 0.84, 0.44, 1)');
+                    self.browserVendor('transform','translateY('+this.lastPageY+'px)')
+                }else {
+                    // 惯性运动
+                    const nowTime = self.getTime();
+                    const v = (pageY - self.lastMoveStart)/(nowTime - self.lastMoveTime);
+                    let duration = Math.abs(v/0.0006);
+                    this.lastPageY += duration*v*0.5;
+
+                    if (self.lastPageY > 0) {
+                        self.lastPageY = 0;
+                        self.browserVendor('transition','all 500ms cubic-bezier(0.25, 0.46, 0.44, 0.94)');
+                    } else if (Math.abs(self.lastPageY) > Math.abs(self.scrollerHeight)) {
+                        self.lastPageY = -self.scrollerHeight;
+                        self.browserVendor('transition','all 500ms cubic-bezier(0.25, 0.46, 0.44, 0.94)');
+                    }else {
+                        self.browserVendor('transition','all '+duration+'ms cubic-bezier(0.23, 1, 0.32, 1)');
+                    }
+                    self.browserVendor('transform','translateY('+this.lastPageY+'px)')
+                }
+            };
+            self.container.addEventListener('touchstart', touchStart)
+            self.container.addEventListener('touchmove', touchMove)
+            self.container.addEventListener('touchend', touchEnd)
+
+        },
+        browserVendor: function(styleStr, value) {
+            const self = this;
+            const style = self.content.style;
+            style[styleStr] = value;
+        },
+        getTime: function() {
+            return parseInt(new Date().getTime());
+        },
+    };
+    var scroll = new MyScroll('#scroll')
+    console.log(scroll)
+</script>
+</body>
+</html>

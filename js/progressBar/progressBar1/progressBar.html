@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>进度条</title>
+    <link rel="stylesheet" href="progress.css">
+</head>
+<body>
+<div class="container">
+    <div class="progress">
+        <div class="progress__bar">
+            <div class="progress__bar-bullet"></div>
+        </div>
+        <div class="progress__bg-placeholder"></div>
+        <ul class="progress__grid">
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+            <li class="progress__bullet-placeholder-item">
+                <div class="progress__bullet-placehoder"></div>
+            </li>
+        </ul>
+    </div>
+    <ul class="list__grid">
+        <li class="list__item list__item--selected">
+            <img src="assets/homer.png" />
+            <p>Homer</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/marge.png" />
+            <p>Marge</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/bart.png" />
+            <p>Bart</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/lisa.png" />
+            <p>Lisa</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/maggie.png" />
+            <p>Maggie</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/burns.png" />
+            <p>Mr Burns</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/moe.png" />
+            <p>Moe</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/krusty.png" />
+            <p>Krusty</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/grampa.png" />
+            <p>Grampa</p>
+        </li>
+        <li class="list__item">
+            <img src="assets/ned.png" />
+            <p>Ned</p>
+        </li>
+    </ul>
+    <div class="btns">
+        <button class="btn btns__back"></button>
+        <button class="btn btns__next"></button>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../../common/lodash.js"></script>
+<script>
+    var next              = document.querySelector('.btns__next');
+    var back              = document.querySelector('.btns__back');
+    var bar               = document.querySelector('.progress__bar');
+    var placeholders      = document.querySelectorAll('.progress__bullet-placeholder-item');
+    var placeholderBullet = document.querySelectorAll('.progress__bullet-placehoder');
+    var barBullet         = document.querySelector('.progress__bar-bullet');
+    var card              = document.querySelectorAll('.list__item');
+
+    var MAX_ITEMS     = placeholders.length;
+    var THROTTLE_TIME = 400;
+    var step          = 0;
+    var currentZIndex = parseInt(window.getComputedStyle(card[0]).zIndex);
+
+    next.addEventListener('click', _.throttle(stepForward, THROTTLE_TIME));
+    back.addEventListener('click', _.throttle(stepBack, THROTTLE_TIME));
+
+    function stepForward() {
+        if (step < MAX_ITEMS - 1) {
+            currentZIndex++;
+            next.classList.add('btn--click');
+            toggleDisableBtn(next);
+            bar.style.height = (++step * 10) + '%';
+            barBullet.style.transform = 'rotate(' + 120 * step + 'deg)';
+            renderPlaceholder();
+
+            card[step].classList.add('list__item--translate');
+            card[step].classList.toggle('list__item--selected');
+            card[step - 1].classList.toggle('list__item--selected');
+            setTimeout(function () {
+                card[step].classList.remove('list__item--translate');
+            }, 400);
+            setTimeout(function () {
+                card[step].style.zIndex = currentZIndex;
+                next.classList.remove('btn--click');
+            }, 200);
+        }
+    }
+
+    function stepBack () {
+        if (step > 0) {
+            currentZIndex++;
+            toggleDisableBtn(back);
+            bar.style.height = (--step * 10) + '%';
+            barBullet.style.transform = 'rotate(' + 120 * step + 'deg)';
+            back.classList.add('btn--click');
+            renderPlaceholder();
+
+            card[step].classList.toggle('list__item--selected');
+            card[step + 1].classList.toggle('list__item--selected');
+            card[step].classList.add('list__item--translate');
+            setTimeout(function () {
+                card[step].classList.remove('list__item--translate');
+            }, 400);
+            setTimeout(function () {
+                card[step].style.zIndex = currentZIndex;
+                back.classList.remove('btn--click');
+            }, 200);
+        }
+    }
+
+    function renderPlaceholder () {
+        Array.prototype.forEach.call(placeholderBullet, function(element, index) {
+            if (index < step) {
+                element.classList.add('progress__bullet-placehoder--hide');
+            } else {
+                element.classList.remove('progress__bullet-placehoder--hide');
+            }
+        });
+    }
+
+    function toggleDisableBtn (btn) {
+        btn.disabled = true;
+        setTimeout(function () {
+            btn.disabled = false;
+        }, THROTTLE_TIME)
+    }
+
+</script>
+</html>

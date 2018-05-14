@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>翻转动画</title>
+    <style>
+        img{
+            width: 100%;
+            display: block;
+        }
+        .flip{
+            width: 384px ;
+            height: 216px;
+            position: relative;
+            margin: 20px auto;
+        }
+        .flip .font,
+        .flip .back{
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            backface-visibility:hidden;
+            transition: all 1s;
+        }
+
+        .horizontal .font{
+            transform: rotateY(0);
+        }
+        .horizontal .back{
+            transform: rotateY(180deg);
+        }
+        .horizontal:hover .font{
+            transform: rotateY(180deg);
+        }
+        .horizontal:hover .back{
+            transform: rotateY(0);
+        }
+
+        .vertical .font{
+            transform: rotateX(0);
+        }
+        .vertical .back{
+            transform: rotateX(180deg);
+        }
+        .vertical:hover .font{
+            transform: rotateX(180deg);
+        }
+        .vertical:hover .back{
+            transform: rotateX(0);
+        }
+
+        .horizontal2{
+            transform-style: preserve-3d;
+            transition: all 1s;
+            transform: rotateY(0);
+        }
+        .horizontal2 .font{
+            backface-visibility: visible;
+
+        }
+        .horizontal2 .back{
+            transform: rotateX(180deg);
+            backface-visibility: visible;
+        }
+        .horizontal2:hover{
+            transform:rotateY(180deg);
+        }
+
+    </style>
+</head>
+<body>
+<div class="flip horizontal">
+    <div class="font">
+        <img src="../../images/13.jpg">
+    </div>
+    <div class="back">
+        <img src="../../images/14.jpg">
+    </div>
+</div>
+<div class="flip vertical">
+    <div class="font">
+        <img src="../../images/13.jpg">
+    </div>
+    <div class="back">
+        <img src="../../images/14.jpg">
+    </div>
+</div>
+<div class="flip horizontal2">
+    <div class="font">
+        <img src="../../images/13.jpg">
+    </div>
+    <div class="back">
+        <img src="../../images/14.jpg">
+    </div>
+</div>
+</body>
+</html>
