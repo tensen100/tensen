@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0,user-scalable=0">
+    <title>Title</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+</body>
+<input type="text">
+<br>
+<p class="txt"></p>
+<script>
+const input = document.querySelector('input');
+const txt = document.querySelector('.txt');
+input.onkeydown = function (e) {
+  const val = this.value;
+  console.log(val);
+  if(val.length > 5){
+    e.preventDefault();
+  }
+  txt.innerHTML = val.length
+}
+</script>
+</body>
+</html>

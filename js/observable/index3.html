@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Observable</title>
+</head>
+<body>
+<script>
+  const emptyObserver = {
+    next: () => {},
+    error: () => {},
+    complete: () => {}
+  };
+
+  class Observer {
+    constructor(destinationOrNext, error,complete) {
+      switch (arguments.length) {
+        case 0:
+        case 1:
+          if (!destinationOrNext) {
+            // 空的observer
+            this.destination = this.safeObserver(emptyObserver)
+          }
+          if (typeof  destinationOrNext === 'object') {
+            // 传入observer 物件
+            this.destination = this.safeObserver(destinationOrNext)
+          }
+          break;
+        default:
+          // 传入1-3个function
+          this.destination = this.safeObserver(destinationOrNext,error,complete);
+          break;
+      }
+    }
+
+    /**
+     * 用来回传正常的observer
+     * @param observerOrNext
+     * @param error
+     * @param complete
+     */
+    safeObserver(observerOrNext, error, complete) {
+      let next;
+      if (typeof observerOrNext === 'function') {
+        // observerOrNext 时next function
+        next = observerOrNext;
+      } else if (observerOrNext) {
+        next = observerOrNext.next || function () {};
+        error = observerOrNext.error|| function (err) { throw  err;};
+        complete = observerOrNext.complete || function () {};
+      }
+
+      return {
+        next: next,
+        error: error,
+        complete: complete
+      }
+    }
+
+    /**
+     * 取消订阅
+     */
+    unsubscribe() {
+      this.isStopped = true;
+    }
+    next(value) {
+      if (!this.isStopped && this.destination.next) {
+        try {
+          this.destination.next(value)
+        } catch (e) {
+          this.unsubscribe();
+          throw e;
+        }
+      }
+    }
+    error(err) {
+      if (!this.isStopped && this.destination.error) {
+        try {
+          this.destination.error(err);
+        } catch (e) {
+          this.unsubscribe();
+          throw e
+        }
+        this.unsubscribe();
+      }
+    }
+    complete() {
+      if (!this.isStopped && this.destination.complete) {
+        try {
+          this.destination.complete();
+        } catch (e) {
+          this.unsubscribe();
+          throw e;
+        }
+        this.unsubscribe();
+      }
+    }
+  }
+
+  class Observable{
+    constructor(subscribe) {
+      if(subscribe) {
+        this._subscribe = subscribe;
+      }
+    }
+    subscribe() {
+      const observer = new Observer(...arguments);
+
+      // 判断当前的observable是否具有operator
+      if (this.operator) {
+        this.operator.call(observer,this.source)
+      } else {
+        this._subscribe(observer);
+      }
+      this._subscribe(observer);
+      return observer;
+    }
+
+    // 操作符
+    map(callback) {
+      // 建立新的observable
+      const observable = new Observable();
+
+      // 保存当前的observable
+      observable.source = this;
+
+      // 保存这个operator的行为并作为是否有operator的依赖
+      observable.operator = {
+        // 执行这个operator的行为
+        call: (observer, source) => {}
+      };
+
+      return observable;
+    }
+  }
+  // 静态方法
+  Observable.create = function (subscribe) {
+    return new Observable(subscribe)
+  };
+  Observable.fromArray = function (array) {
+    if (!Array.isArray(array)) {
+      throw new Error('必须传入一个数组');
+    }
+    return new Observable(function (observer) {
+      try {
+        array.forEach( value => observer.next(value));
+        observer.complete();
+      } catch (e) {
+        observer.error(err)
+      }
+    })
+  };
+
+
+
+    // 使用
+  const observer = {
+    next: function (value) {
+      console.log(value)
+    },
+    complete: function () {
+      console.log('complete')
+    }
+  };
+
+  // const observable = new Observable(function (observer) {
+  //   observer.next(1);
+  //   observer.next(2);
+  //   observer.next(3);
+  //   observer.complete();
+  //   observer.next(4)
+  // });
+  // observable.subscribe(observer);
+
+  // const observable2 = Observable.create(function (observer) {
+  //   observer.next(11);
+  //   observer.next(22);
+  //   observer.next(33);
+  //   observer.complete();
+  //   observer.next(44)
+  // });
+  // observable2.subscribe(observer);
+
+    const observable3 = Observable.fromArray(['h','e','l','l','o']);
+    observable3.subscribe(observer)
+</script>
+</body>
+</html>

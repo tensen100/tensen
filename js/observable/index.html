@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Observable</title>
+</head>
+<body>
+<script>
+  /**
+   * 建立observable物件
+   * @param subscriber
+   * @returns {{subscribe: subscribe}}
+   */
+    function create(subscriber) {
+      return {
+        subscribe: function (observer) {
+          subscriber(observer)
+        }
+      }
+    }
+
+    // 使用
+    const observable = create(function (observer) {
+      observer.next(1);
+      observer.next(2);
+      observer.next(3);
+    });
+    const observer = {
+      next: function (value) {
+        console.log(value)
+      }
+    };
+    observable.subscribe(observer)
+</script>
+</body>
+</html>

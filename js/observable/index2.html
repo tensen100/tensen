@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Observable</title>
+</head>
+<body>
+<script>
+  const emptyObserver = {
+    next: () => {},
+    error: () => {},
+    complete: () => {}
+  };
+  class Observer {
+    constructor(destinationOrNext, error,complete) {
+      switch (arguments.length) {
+        case 0:
+        case 1:
+          if (!destinationOrNext) {
+            // 空的observer
+            this.destination = this.safeObserver(emptyObserver)
+          }
+          if (typeof  destinationOrNext === 'object') {
+            // 传入observer 物件
+            this.destination = this.safeObserver(destinationOrNext)
+          }
+          break;
+        default:
+          // 传入1-3个function
+          this.destination = this.safeObserver(destinationOrNext,error,complete);
+          break;
+      }
+    }
+
+    /**
+     * 用来回传正常的observer
+     * @param observerOrNext
+     * @param error
+     * @param complete
+     */
+    safeObserver(observerOrNext, error, complete) {
+      let next;
+      if (typeof observerOrNext === 'function') {
+        // observerOrNext 时next function
+        next = observerOrNext;
+      } else if (observerOrNext) {
+        next = observerOrNext.next || function () {};
+        error = observerOrNext.error|| function (err) { throw  err;};
+        complete = observerOrNext.complete || function () {};
+      }
+
+      return {
+        next: next,
+        error: error,
+        complete: complete
+      }
+    }
+
+    /**
+     * 取消订阅
+     */
+    unsubscribe() {
+      this.isStopped = true;
+    }
+    next(value) {
+      if (!this.isStopped && this.destination.next) {
+        try {
+          this.destination.next(value)
+        } catch (e) {
+          this.unsubscribe();
+          throw e;
+        }
+      }
+    }
+    error(err) {
+      if (!this.isStopped && this.destination.error) {
+        try {
+          this.destination.error(err);
+        } catch (e) {
+          this.unsubscribe();
+          throw e
+        }
+        this.unsubscribe();
+      }
+    }
+    complete() {
+      if (!this.isStopped && this.destination.complete) {
+        try {
+          this.destination.complete();
+        } catch (e) {
+          this.unsubscribe();
+          throw e;
+        }
+        this.unsubscribe();
+      }
+    }
+  }
+  /**
+   * 建立observable物件
+   * @param subscriber
+   * @returns {{subscribe: subscribe}}
+   */
+    function create(subscriber) {
+      return {
+        subscribe: function (observerOrNext, error, complete) {
+          const observable = new Observer(observerOrNext, error, complete);
+          subscriber(observable);
+          return observable;
+        }
+      }
+    }
+
+    // 使用
+    const observable = create(function (observer) {
+      observer.next(1);
+      observer.next(2);
+      observer.next(3);
+      observer.complete();
+      observer.next(4)
+    });
+    const observer = {
+      next: function (value) {
+        console.log(value)
+      },
+      complete: function () {
+        console.log('complete')
+      }
+    };
+    observable.subscribe(observer)
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jquery</title>
+    <script type="text/javascript" src="../common/jquery-2.2.2.min.js"></script>
+</head>
+<body>
+<button>click</button>
+<script>
+    let end = true; // 是否结束
+    $(document).on('click','button',function () {
+      console.log(1)
+    });
+
+    $('button').click(function () {
+      console.log(2);
+      if(end) {
+        end = false;
+        setTimeout( _ => {
+          console.log(3);
+          $('button').click();
+          end = true;
+        },2000);
+        return false
+      }
+      return true;
+
+    })
+
+
+
+</script>
+</body>
+</html>

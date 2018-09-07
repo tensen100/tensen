@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flex</title>
+</head>
+<body>
+<button onclick="go()">go</button>
+<button onclick="push()">pushState</button>
+<button onclick="replace()">replaceState</button>
+<h1 id="h1"></h1>
+<script>
+    let goN = 1;
+    let pushN = 1;
+    let replaceN = 1;
+    function go() {
+      location.hash = 'go='+goN;
+      goN++;
+    }
+
+    function push() {
+      history.pushState({push:`push${pushN}`},`push${pushN}`,`push${pushN}`);
+      pushN++
+    }
+
+    function replace() {
+      history.replaceState({replace:`replace${replaceN}`},`replace${replaceN}`,`replace${replaceN}`);
+      replaceN++
+
+    }
+    window.onload = function(){
+      if (history.length === 1) {
+        history.replaceState({first:true},null,document.URL);
+        history.pushState(null,null,document.URL);
+        console.log('第一次打开')
+      }
+
+    };
+    window.addEventListener('popstate',function (e) {
+      console.log('state:',e.state);
+      if(e.state && e.state.first) {
+        // location.hash = '#home';
+        console.log('跳转到首页')
+      }
+
+    });
+
+    /*window.addEventListener('popstate',function () {
+      history.pushState('forward','#');
+      history.forward(1);
+      alert('不可后退')
+    })*/
+
+    /*history.pushState(null,null,document.URL);
+    console.log(document.URL);
+    window.addEventListener('popstate',function () {
+      console.log(document.URL);
+      history.pushState(null,null,document.URL)
+    })*/
+</script>
+</body>
+</html>
