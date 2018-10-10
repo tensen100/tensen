@@ -3,145 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
+    <style>
+        div{
+            width: 400px;
+            height: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            background: yellowgreen;
+            border: 1px solid green;
+        }
+    </style>
 </head>
 <body>
+<div></div>
 <script>
-  Array.prototype.concatAll = function() {
-    var result = [];
-    this.forEach((array) => {
-      result.push.apply(result, array);
-    });
-    return result;
-  };
+  const fetchComputedStyle = (element, property) => {
+    if (window.getComputedStyle) {
+      const computedStyles = window.getComputedStyle(element);
 
-  var courseLists = [{
-    "name": "My Courses",
-    "courses": [{
-      "id": 511019,
-      "title": "React for Beginners",
-      "covers": [{
-        width: 150,
-        height: 200,
-        url: "http://placeimg.com/150/200/tech"
-      }, {
-        width: 200,
-        height: 200,
-        url: "http://placeimg.com/200/200/tech"
-      }, {
-        width: 300,
-        height: 200,
-        url: "http://placeimg.com/300/200/tech"
-      }],
-      "tags": [{
-        id: 1,
-        name: "JavaScript"
-      }],
-      "rating": 5
-    }, {
-      "id": 511020,
-      "title": "Front-End automat workflow",
-      "covers": [{
-        width: 150,
-        height: 200,
-        url: "http://placeimg.com/150/200/arch"
-      }, {
-        width: 200,
-        height: 200,
-        url: "http://placeimg.com/200/200/arch"
-      }, {
-        width: 300,
-        height: 200,
-        url: "http://placeimg.com/300/200/arch"
-      }],
-      "tags": [{
-        "id": 2,
-        "name": "gulp"
-      }, {
-        "id": 3,
-        "name": "webpack"
-      }],
-      "rating": 5
-    }]
-  }, {
-    "name": "New Release",
-    "courses": [{
-      "id": 511022,
-      "title": "Vue2 for Beginners",
-      "covers": [{
-        width: 150,
-        height: 200,
-        url: "http://placeimg.com/150/200/nature"
-      }, {
-        width: 200,
-        height: 200,
-        url: "http://placeimg.com/200/200/nature"
-      }, {
-        width: 300,
-        height: 200,
-        url: "http://placeimg.com/300/200/nature"
-      }],
-      "tags": [{
-        id: 1,
-        name: "JavaScript"
-      }],
-      "rating": 5
-    }, {
-      "id": 511023,
-      "title": "Angular2 for Beginners",
-      "covers": [{
-        width: 150,
-        height: 200,
-        url: "http://placeimg.com/150/200/people"
-      }, {
-        width: 200,
-        height: 200,
-        url: "http://placeimg.com/200/200/people"
-      }, {
-        width: 300,
-        height: 200,
-        url: "http://placeimg.com/300/200/people"
-      }],
-      "tags": [{
-        id: 1,
-        name: "JavaScript"
-      }],
-      "rating": 5
-    }]
-  }];
-
-  var result = courseLists
-    .map( item => item.courses)
-    .concatAll().
-    map( item => {
-      return {
-        id: item.id,
-        title: item.title,
-        cover: item.covers[0].url
+      if (computedStyles) {
+        property = property.replace(/([A-Z])/g, '-$1').toLowerCase();
+        return computedStyles.getPropertyValue(property);
       }
-    });
-  console.log(result);
-  /* var result = courseList
-   不得直接使用索引 covers[0]，請用 concatAll, map, filter, forEach 完成
-  result 結果為 [
-      {
-        id: 511019,
-        title: "React for Beginners",
-        cover: "http://placeimg.com/150/200/tech"
-      }, {
-        id: 511020,
-        title: "Front-End automat workflow",
-        cover: "http://placeimg.com/150/200/arch"
-      }, {
-        id: 511022,
-        title: "Vue2 for Beginners",
-        cover: "http://placeimg.com/150/200/nature"
-      }, {
-        id: 511023,
-        title: "Angular2 for Beginners",
-        cover: "http://placeimg.com/150/200/people"
-      },
-   ]
-  */
+    } else if (element.currentStyle) {
+      property = property.replace(/-([a-z])/ig, (all, letter) => letter.toUpperCase());
+      return element.currentStyle[property]
+    }
+  };
+  const element = document.querySelector('div');
+
+
+  function show() {
+    console.log('width', fetchComputedStyle(element, 'width'));
+    console.log('height', fetchComputedStyle(element, 'height'));
+    console.log('padding', fetchComputedStyle(element, 'padding'));
+    console.log('margin', fetchComputedStyle(element, 'margin'));
+    console.log('background', fetchComputedStyle(element, 'background'));
+    console.log('border', fetchComputedStyle(element, 'border'));
+    console.log('background-color', fetchComputedStyle(element, 'background-color'));
+  }
+    
+
 
 
 </script>
