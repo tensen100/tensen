@@ -242,7 +242,7 @@ const tidyUp = (elem, type) => {
  */
 const triggerEvent = (elem, event) => {
   const elemData = getData(elem);
-  const parent = ele.parentNode || elem.ownerDocument;
+  const parent = elem.parentNode || elem.ownerDocument;
 
   if (typeof event === 'string') {
     event = { type: event, target: elem};

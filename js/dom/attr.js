@@ -13,6 +13,13 @@ const translation = {
   contenteditable: 'contentEditable'
 };
 
+/**
+ * 获取|设置属性
+ * @param element
+ * @param name
+ * @param value
+ * @returns {string}
+ */
 const attr = (element, name, value) => {
   const property = translation[name] || name;
   const propertyExists = typeof element[property] !== 'undefined';
