@@ -88,9 +88,9 @@
                 self.startPageY = pageY; // 记录触摸开始的位置
 
                 const transform = getComputedStyle(this.content).getPropertyValue('transform');
-                const y = transform.slice(transform.indexOf('(')+1,transform.indexOf(')'))
+                const y = transform.slice(transform.indexOf('(')+1,transform.indexOf(')'));
                 self.lastPageY = parseFloat(y.split(', ')[5]) || 0;
-                self.browserVendor('transform', 'translateY('+self.lastPageY+'px)')
+                self.browserVendor('transform', 'translateY('+self.lastPageY+'px)');
                 self.browserVendor('transition', 'none'); // 清除过度动画
 
                 // 惯性运动

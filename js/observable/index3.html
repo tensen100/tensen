@@ -20,10 +20,16 @@
           if (!destinationOrNext) {
             // 空的observer
             this.destination = this.safeObserver(emptyObserver)
+              break;
+          }
+          if(destinationOrNext instanceof Observer){
+              this.destination = destinationOrNext;
+              break;
           }
           if (typeof  destinationOrNext === 'object') {
             // 传入observer 物件
-            this.destination = this.safeObserver(destinationOrNext)
+            this.destination = this.safeObserver(destinationOrNext);
+              break;
           }
           break;
         default:
@@ -97,6 +103,22 @@
     }
   }
 
+  class MapObserver extends Observer{
+      constructor(observer,callback) {
+          super(observer);
+          this.callback = callback;
+          this.next = this.next.bind(this);
+      }
+      next(value) {
+          try {
+              this.destination.next(this.callback(value))
+          } catch (e) {
+              this.destination.error(e);
+              return
+          }
+      }
+  }
+
   class Observable{
     constructor(subscribe) {
       if(subscribe) {
@@ -112,7 +134,6 @@
       } else {
         this._subscribe(observer);
       }
-      this._subscribe(observer);
       return observer;
     }
 
@@ -127,7 +148,10 @@
       // 保存这个operator的行为并作为是否有operator的依赖
       observable.operator = {
         // 执行这个operator的行为
-        call: (observer, source) => {}
+        call: (observer, source) => {
+            const newObserver = new MapObserver(observer,callback);
+            return source.subscribe(newObserver)
+        }
       };
 
       return observable;
@@ -181,7 +205,7 @@
   // });
   // observable2.subscribe(observer);
 
-    const observable3 = Observable.fromArray(['h','e','l','l','o']);
+    const observable3 = Observable.fromArray([1,2,3,4,5]).map( v  => v*2);
     observable3.subscribe(observer)
 </script>
 </body>
