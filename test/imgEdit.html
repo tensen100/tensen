@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片编辑上传</title>
+    <script src="../common/jquery-2.2.2.min.js"></script>
+    <style>
+        .container{
+            width: 500px;
+        }
+        .container>img{
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+<!--multiple-->
+<input id="file" type="file" value="选择图片">
+<div class="container">
+    <img src="../images/1.jpg">
+    <div class="mask"></div>
+    <div class="view"></div>
+</div>
+
+
+<script>
+    /**
+     * 获取本地图片url
+     * @param file
+     * @param base64 // 是否获取base64 url
+     * @param callBack
+     */
+    const getImgUrl = (file, base64 = false, callBack) => {
+      if (base64) {
+        if (callBack) {
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+          fileReader.onload = function () {
+            callBack(this.result)
+          };
+        } else {
+          throw new Error('no callBack')
+        }
+        return;
+      }
+      return URL.createObjectURL(file);
+
+    };
+
+
+
+    class ImgEdit{
+      constructor({fileInput, container}) {
+        this.fileInput = fileInput;
+        this.container = container;
+        this._init()
+      }
+      _init() {
+        this._bindEvent()
+      }
+      _bindEvent(){
+        this._bindFileChange();
+      }
+      _bindFileChange() {
+        const  me = this;
+        this.fileInput.addEventListener('change', function () {
+          const files = this.files;
+          [].forEach.call(this.files, function (file) {
+            me._render(getImgUrl(file))
+          })
+        });
+      }
+      _render(url){
+        this._clearContainer();
+        const img = new Image();
+        img.src = url;
+        this.container.appendChild(img);
+      }
+      _clearContainer() {
+        this.container.html = '';
+      }
+    }
+
+
+
+
+    // 使用
+
+    const fileInput = document.querySelector('#file');
+    const container = document.querySelector('.container');
+
+    new ImgEdit({
+      fileInput,
+      container
+    })
+
+</script>
+
+
+</body>
+</html>
