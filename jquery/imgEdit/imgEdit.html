@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片编辑上传</title>
+    <script src="../../common/jquery-2.2.2.min.js"></script>
+    <script src="../../common/layui/layui.all.js"></script>
+    <link rel="stylesheet" href="../../common/layui/css/layui.css">
+    <style>
+        .img-edit-wrapper{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            background-image: linear-gradient(45deg ,transparent 75% ,rgba(0,0,0,0.2) 0),
+            linear-gradient(45deg ,rgba(0,0,0,0.2) 25%,transparent 0 ),
+            linear-gradient(45deg ,transparent 75% ,rgba(0,0,0,0.2) 0),
+            linear-gradient(45deg ,rgba(0,0,0,0.2) 25%,transparent 0 );
+            background-position: 0 0,20px 20px,20px 20px,40px 40px;
+            background-size: 40px 40px;
+        }
+        .img-edit-container {
+            position: absolute;
+            margin: auto;
+            overflow: hidden;
+            font-size: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            box-shadow: 0 0 10px #000000;
+        }
+
+        .img-edit-container > img {
+            width: 100%;
+        }
+
+        .view {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+            left: 0;
+            top: 0;
+            border: 1px dashed #fff;
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+            cursor: move;
+        }
+
+        .view .mask{
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .view .line{
+            display: block;
+            position: absolute;
+        }
+        .view .line.row{
+            height: 33.3333333%;
+            width: 100%;
+            border-bottom: 1px dashed #ffffff;
+            border-top: 1px dashed #ffffff;
+            top: 33.3333333%;
+            left: 0;
+        }
+        .view .line.col{
+            width: 33.3333333%;
+            height: 100%;
+            border-left: 1px dashed #ffffff;
+            border-right: 1px dashed #ffffff;
+            left: 33.3333333%;
+            top: 0;
+
+        }
+
+        .view .point {
+            display: block;
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255,255,255, 0.8);
+            transition: background-color 0.3s;
+        }
+
+        .view .point:hover {
+            background: rgba(255,255,255,1);
+        }
+
+        .view .left-top {
+            left: 0;
+            top: 0;
+            cursor: nw-resize;
+        }
+
+        .view .right-top {
+            right: 0;
+            top: 0;
+            cursor: ne-resize;
+        }
+
+        .view .left-bottom {
+            left:0;
+            bottom: 0;
+            cursor: ne-resize;
+        }
+
+        .view .right-bottom {
+            right: 0;
+            bottom: 0;
+            cursor: nw-resize;
+        }
+    </style>
+</head>
+<body>
+<!--multiple-->
+<button type="button" class="layui-btn img-upload" data-size="200,800" data-preview="#preview">
+    <i class="layui-icon">&#xe67c;</i>上传图片
+</button>
+<!--<input class="file-input" type="file" value="选择图片" data-size="400,300">-->
+<div id="preview"></div>
+
+<script>
+  (function ($) {
+    /**
+     * 获取本地图片url
+     * @param file
+     * @param base64 // 是否获取base64 url
+     * @param callBack
+     */
+    const getImgUrl = (file, base64 = false, callBack) => {
+      if (base64) {
+        if (callBack) {
+          const fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+          fileReader.onload = function () {
+            callBack(this.result);
+          };
+        } else {
+          throw new Error('no callBack');
+        }
+        return;
+      }
+      return URL.createObjectURL(file);
+
+    };
+
+    /**
+     * 限制一个数的最大值和最小值
+     * @param min
+     * @param max
+     * @param num
+     */
+    const rangeNumber = (min, max, num) => {
+      if (num < min) return min;
+      if (num > max) return max;
+      return num;
+    };
+
+    /**
+     * 计算缩放偏移量
+     * @param x
+     * @param y
+     * @param ratio 固定宽高比列
+     * @param pos 开始象限
+     * @param position 开始位置
+     * @returns {{width: *, height: *, left: (number|*), top: (number|*)}}
+     */
+    const computeScaleOffset = (x, y, pos, ratio, position) => {
+      let ow, oh,ox = 0,oy = 0;
+      if ((pos === 0 || pos === 3)) {
+        x = Math.abs(Math.min(-x, position.x, position.y * ratio)) * (x > 0 ? 1: -1);
+        ow = -x;
+        oh = ow / ratio;
+      }else {
+        x = Math.abs(Math.min(x, position.x, position.y * ratio)) * (x > 0 ? 1: -1);
+        ow = x;
+        oh = ow / ratio;
+      }
+      ox = (pos === 0 || pos === 3) ? -ow : 0;
+      oy = (pos === 0 || pos === 1) ? -oh : 0;
+      return {ow,oh,ox,oy};
+    };
+
+    const WRAPPER_CLASS_NAME = 'img-edit-wrapper';
+    const CONTAINER_CLASS_NAME = 'img-edit-container';
+    const VIEW_WIDTH = 1000;
+    const VIEW_HEIGHT = 563;
+    const VIEW_CLASS_NAME = 'view';
+    const VIEW_MASK_CLASS = 'mask';
+    const VIEW_POINT_CLASS = 'point';
+    const POSITION = ['left-top', 'right-top','right-bottom', 'left-bottom'];
+    const VIEW_LINE_CLASS = ['line row','line col'];
+
+    const EVENT_DOWN = 'mousedown';
+    const EVENT_UP = 'mouseup';
+    const EVENT_MOVE = 'mousemove';
+
+    class ImgEdit {
+      constructor({file, container, size, preview}) {
+        this.file = file; // 图片文件
+        this.container = container; // 编辑区域
+        this.size = size; // 裁剪尺寸
+        this.ratio = size[0] / size[1]; // 宽高比
+        this.preview = preview;
+        this._loadImg().then( () => {
+          this._init();
+        });
+      }
+
+      /**
+       * 加载图片
+       * @private
+       */
+      _loadImg() {
+        const me = this;
+        return new Promise( (resolve, reject) => {
+          const img = new Image();
+          img.src = getImgUrl(me.file);
+          img.onload = () => {
+            me.img = img;
+            resolve();
+          };
+          img.onerror = () => {
+            reject('Image load err !');
+          };
+        });
+      }
+
+      /**
+       * 初始化
+       * @private
+       */
+      _init() {
+        this._initSize();
+        this._initView();
+        this._initEvent();
+      }
+
+      /**
+       * 初始化尺寸
+       * @private
+       */
+      _initSize() {
+        const me = this;
+        const img = me.img;
+
+        // 图片宽高
+        const imgWidth = img.width;
+        const imgHeight = img.height;
+
+        // 图片宽高比
+        const imgRatio = imgWidth / imgHeight;
+
+        // 容器宽高
+        let containerWidth;
+        let containerHeight;
+
+        if(VIEW_WIDTH / VIEW_HEIGHT > imgRatio) {
+          containerWidth = VIEW_HEIGHT * imgRatio;
+          containerHeight = VIEW_HEIGHT;
+        } else {
+          containerWidth = VIEW_WIDTH;
+          containerHeight = containerWidth * imgHeight / imgWidth;
+        }
+
+        // 裁切视图宽高
+        let viewWidth, viewHeight;
+
+        // 适配容器宽高
+        if (me.ratio > imgRatio) {
+          viewWidth = containerWidth;
+          viewHeight = viewWidth / me.ratio;
+        } else {
+          viewHeight = containerHeight;
+          viewWidth = viewHeight * me.ratio;
+        }
+
+        //  图片尺寸
+        me.imgSize = {
+          width: imgWidth,
+          height: imgHeight,
+        };
+
+        // 容器尺寸
+        me.containerSize = {
+          width: containerWidth,
+          height: containerHeight,
+        };
+
+        // 裁切视图尺寸
+        me.viewSize = {
+          width: viewWidth,
+          height: viewHeight,
+        };
+
+        // 裁切视图位置
+        me.viewPosition = {
+          x: (containerWidth - viewWidth) / 2,
+          y: (containerHeight - viewHeight) / 2
+        };
+      }
+
+      /**
+       * 初始化视图
+       * @private
+       */
+      _initView() {
+        const me = this;
+        const img = me.img;
+        const size = me.viewSize;
+        const position = me.viewPosition;
+        const containerSize = me.containerSize;
+
+        // 编辑视图
+        const view = $(`<div class="${VIEW_CLASS_NAME}"></div>`);
+        view.css({
+          left: position.x,
+          top: position.y,
+          width: size.width,
+          height: size.height
+        });
+
+        // 九宫格
+        for(let i =0;i<2;i++) {
+          view.append($(`<span class="${VIEW_LINE_CLASS[i]}"></span>`));
+        }
+
+        // 拖拽层
+        const mask = $(`<div class="${VIEW_MASK_CLASS}"></div>`);
+        view.append(mask);
+
+        // 缩放点
+        for (let i = 0; i < 4; i++) {
+          view.append($(`<span class="${POSITION[i]} ${VIEW_POINT_CLASS}" data-idx="${i}"></span>`));
+        }
+
+        $(me.container)
+          .css({
+            width: containerSize.width,
+            height: containerSize.height
+          })
+          .append(img)
+          .append(view);
+
+        me.view = view[0];
+      }
+
+      /**
+       * 初始化事件
+       * @private
+       */
+      _initEvent() {
+        const me = this;
+        me._bindDrag();
+        me._bindResize();
+        me._bindCommon();
+      }
+
+      /**
+       * 绑定拖拽事件
+       * @private
+       */
+      _bindDrag() {
+        const me = this;
+        const view = me.view;
+        const viewSize = me.viewSize;
+        const containerSize = me.containerSize;
+        const page = {
+          x: 0,
+          y: 0
+        }; // 记录鼠标按下的位置
+        const viewPosition = {
+          x: 0,
+          y: 0
+        };
+        const max = {
+          x: 0,
+          y: 0
+        }; // 记录最大值
+        me.isDrag = false;
+
+        const handleDown = function (e) {
+          e.preventDefault();
+          // 记录鼠标按下的位置
+          page.x = e.pageX;
+          page.y = e.pageY;
+
+          // 记录裁切区域位置
+          viewPosition.x = view.offsetLeft;
+          viewPosition.y = view.offsetTop;
+
+          // 记录可移动的最大值
+          max.x = containerSize.width - viewSize.width;
+          max.y = containerSize.height - viewSize.height;
+
+          me.isDrag = true;
+        };
+        const handleMove = function (e) {
+          if(!me.isDrag) return;
+          e.preventDefault();
+          // 计算鼠标移动距离
+          const offsetX = e.pageX - page.x;
+          const offsetY = e.pageY - page.y;
+
+          $(view).css({
+            left: rangeNumber(0, max.x, viewPosition.x + offsetX),
+            top: rangeNumber(0, max.y, viewPosition.y + offsetY)
+          });
+        };
+        $(view).find(`.${VIEW_MASK_CLASS}`)
+          .on(EVENT_DOWN, handleDown)
+          .on(EVENT_MOVE, handleMove);
+      }
+
+      /**
+       * 绑定缩放事件
+       * @private
+       */
+      _bindResize() {
+        const me = this;
+        const viewSize = me.viewSize;
+        const containerSize = me.containerSize;
+        const viewPosition = {
+          x: 0,
+          y: 0,
+          r: 0,
+          b: 0
+        };
+        const view = me.view;
+        const page = {
+          x: 0,
+          y: 0,
+        };
+        let pos = 0;
+
+        me.isResize = false;
+
+        const handleDown = function (e) {
+          e.preventDefault();
+          // 记录当前按下的元素
+          pos = parseInt($(this).data('idx'));
+
+          // 记录鼠标按下时的位置
+          page.x = e.pageX;
+          page.y = e.pageY;
+
+          // 记录剪切区域的位置
+          viewPosition.x = view.offsetLeft;
+          viewPosition.y = view.offsetTop;
+          viewPosition.r = containerSize.width - viewSize.width - viewPosition.x;
+          viewPosition.b = containerSize.height - viewSize.height - viewPosition.y;
+
+          me.isResize = true;
+        };
+        const handleMove = function (e) {
+          if(!me.isResize) return;
+          e.preventDefault();
+          const offsetX = e.pageX - page.x;
+          const offsetY = e.pageY - page.y;
+
+          const offset = computeScaleOffset(offsetX, offsetY, pos, me.ratio, viewPosition);
+          $(view).css({
+            width: viewSize.width + offset.ow,
+            height: viewSize.height + offset.oh,
+            left: viewPosition.x + offset.ox,
+            top: viewPosition.y + offset.oy
+          });
+        };
+        $(view).find(`.${VIEW_POINT_CLASS}`).each( (idx, item) => {
+          $(item).on(EVENT_DOWN, handleDown);
+        });
+        $(me.container).on(EVENT_MOVE, handleMove);
+      }
+
+      /**
+       * 绑定公共事件
+       * @private
+       */
+      _bindCommon() {
+        const me = this;
+        me.handleUp = function (e) {
+          e.preventDefault();
+          if(me.isDrag) {
+            me.isDrag = false;
+            me.viewPosition.x = me.view.offsetLeft;
+            me.viewPosition.y = me.view.offsetTop;
+          }
+          if(me.isResize) {
+            me.isResize = false;
+            me.viewSize.width = me.view.offsetWidth;
+            me.viewSize.height = me.view.offsetHeight;
+            me.viewPosition.x = me.view.offsetLeft;
+            me.viewPosition.y = me.view.offsetTop;
+          }
+        };
+        $(document).on(EVENT_UP, me.handleUp);
+      }
+
+      /**
+       * 执行裁剪
+       * return promise<blob>
+       */
+      done() {
+        const me = this;
+        const canvas = document.createElement('canvas');
+        [canvas.width, canvas.height] = me.size;
+        return new Promise((resolve, reject) => {
+          if (canvas.getContext){
+            const ctx = canvas.getContext('2d');
+            const ratio = me.containerSize.width / me.imgSize.width;
+            const [ x, y, width, height, sx, sy, swidth, sheight] =
+              [0,0, ...me.size, ...[me.viewPosition.x , me.viewPosition.y, me.viewSize.width, me.viewSize.height].map( x => x/ratio)];
+            ctx.drawImage(me.img, sx, sy,swidth, sheight, x, y, width, height);
+
+            $(me.preview).html('').append(canvas);
+
+            canvas.toBlob(function (blob) {
+              resolve(blob);
+            });
+          } else {
+            reject('Your browser not support canvas!');
+          }
+        });
+      }
+
+      /**
+       * 解除document上绑定的事件
+       * @private
+       */
+      unBind(){
+        const me = this;
+        $(document).off(EVENT_UP, me.handleUp);
+      }
+    }
+
+    $.imgUpload = function () {
+      const fn = function () {
+
+        const size = $(this).data('size').split(',').map( x => parseInt(x));
+        const preview = $($(this).data('preview'))[0];
+        const name = $(this).data('name');
+
+        $('<input type="file">').on('change', function () {
+          const me = this;
+          let imgEdit;
+          const dialogIdx = layer.open({
+            type: 1,
+            title: '图片裁切',
+            area: [`${VIEW_WIDTH}px`, `${VIEW_HEIGHT + 100}px`],
+            content: `<div class="${WRAPPER_CLASS_NAME}"><div class="${CONTAINER_CLASS_NAME}"></div></div>`,
+            btn: ['确认', '取消'],
+            success: function () {
+              imgEdit = new ImgEdit({
+                file: me.files[0],
+                size: size,
+                container: $(`.${CONTAINER_CLASS_NAME}`)[0],
+                preview: preview
+              });
+            },
+            yes: function () {
+              imgEdit.done().then( blob => {
+                const formData = new FormData();
+                formData.append('file', blob);
+                console.log(blob);
+                $.ajax({
+                  url: `${location.origin}/upload/image`,
+                  type: 'post',
+                  data: formData,
+                  processData:false,
+                  contentType: false,
+                  dataType: 'json',
+                  success: function (res) {
+                    if (!res.code) {
+                      console.log('图片上传成功');
+                      $(me.preview).append($(`<input type="hidden" name="${name}" value="${res.data}">`));
+                    } else {
+                      console.log('图片上传失败');
+                      if (res.msg) layer.msg(res.msg);
+                      if (res.data.jurl) {
+                        setTimeout(function () {
+                          window.location.href = res.data.jurl;
+                        }, 500);
+                      }
+                    }
+                  },
+                  error: function () {
+                    console.log('图片上传失败');
+                  }
+                });
+              });
+              imgEdit.unBind();
+              imgEdit = null;
+              layer.close(dialogIdx);
+            },
+            cancel: function () {
+              imgEdit.unBind();
+              imgEdit = null;
+            }
+          });
+        }).click();
+      };
+      $('.img-upload').each( function () {
+        const me = $(this);
+        const bindUpload = me.data('bindUpload');
+        if (!bindUpload) {
+          me.click(fn);
+          me.data('bindUpload', true);
+        }
+      });
+    };
+
+// 使用
+    $(document).ready(function () {
+      $.imgUpload();
+    });
+  })(jQuery);
+
+</script>
+
+
+
+</body>
+</html>
