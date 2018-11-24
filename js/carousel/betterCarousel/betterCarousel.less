@@ -1,0 +1,123 @@
+html,body{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+ul,li{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+img{
+  width: 100%;
+}
+.carousel{
+  position: relative;
+  width: 960px;
+  height: 540px;
+  overflow: hidden;
+  margin: 20px auto;
+  box-shadow: 0 0 3px rgba(0,0,0,0.6);
+}
+.carousel-list{
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+.carousel-item{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  &.show{
+    display: block;
+  }
+}
+.carousel-clone{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+.carousel-clone-item{
+  position: absolute;
+  overflow: hidden;
+}
+.carousel-clone-content{
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/**
+ * 快速创建动画
+ * @name 动画名称
+ * @back 前一页状态
+ * @cur 当前页状态
+ * @next 下一页状态
+ * @time 动画执行时间
+ */
+.create-mixin(@name,@prev,@cur,@next,@time) {
+  .@{name}-back-enter-active,
+  .@{name}-back-leave-active,
+  .@{name}-front-leave-active,
+  .@{name}-front-enter-active{
+    transition: @time;
+  }
+
+  .@{name}-back-enter,
+  .@{name}-front-leave-to{
+    transform: @next;
+  }
+  .@{name}-back-enter-to,
+  .@{name}-front-enter-to,
+  .@{name}-back-leave,
+  .@{name}-front-leave{
+    transform: @cur;
+  }
+
+  .@{name}-back-leave-to,
+  .@{name}-front-enter{
+    transform: @prev;
+  }
+}
+
+// 编写动画
+
+// 左滑动
+.create-mixin(left,
+        translateX(100%) scale(0.8),
+        translateX(0) scale(1),
+        translateX(-100%) scale(0.8),
+        0.5s);
+
+// 右滑动
+.create-mixin(right,
+        translateX(-100%) scale(0.8),
+        translateX(0) scale(1),
+        translateX(100%) scale(0.8),
+        0.5s);
+
+// 上滑动
+.create-mixin(top,
+        translateY(100%) scale(0.8),
+        translateY(0) scale(1),
+        translateY(-100%) scale(0.8),
+        0.5s);
+
+// 下滑动
+.create-mixin(bottom,
+        translateY(-100%) scale(0.8),
+        translateY(0) scale(1),
+        translateY(100%) scale(0.8),
+        0.5s);
+

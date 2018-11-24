@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
+
+    <!--<script type="text/javascript" src="../js/dom/ready.js"></script>-->
 </head>
 <body>
+<div id="box1">hello</div>
+<div id="box2"></div>
+<!--<script type="text/javascript" src="../js/dom/dom.js"></script>-->
 <script>
-    const tips = async (content, time = 2000) => {
-        console.log('--start');
-        setTimeout(() => {
-            return console.log(content)
-        }, time)
-    };
-
-    var run = () => {
-        tips('hello').then( () => {
-            console.log('--end')
-        });
+    const obj = {
+        user: {name: 'aaa',id: 'bbb'},
+        phone: '123'
     }
 
+    function transform(obj) {
+        const { user: {name}, phone} = obj;
+        console.log(name, phone)
+    }
+    transform(obj);
 </script>
 </body>
 </html>
