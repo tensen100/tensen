@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print</title>
+    <style>
+        .body th,.body td{
+            border: 1px solid #333333;
+            text-align: center;
+        }
+        .body{
+            border: 1px solid #333333;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        body {
+            counter-reset: pages;
+        }
+
+        a {
+            counter-increment: pages;
+        }
+
+        a::before {
+            content: counter(pages);
+        }
+
+        @media print {
+            .print{
+                display: none;
+            }
+
+        }
+    </style>
+</head>
+<body>
+<button class="print">打印</button>
+<div class="container">
+    <table width="100%" border="0" cellspacing="1"cellpadding="0">
+        <thead>
+            <tr>
+                <td>
+                    <table class="header">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span class="bold">打印时间：</span>
+                            </td>
+                            <td>
+                                <span  class="bold">打印人：</span>
+                            </td>
+                            <td>
+                                <span  class="bold">公司地址：</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <table class="body">
+                        <thead>
+                            <tr>
+                                <th>行号</th>
+                                <th>货号</th>
+                                <th>批次</th>
+                                <th>品名</th>
+                                <th>箱数</th>
+                                <th>数量</th>
+                                <th>生产日期</th>
+                                <th>有效日期</th>
+                                <th>单价</th>
+                                <th>金额</th>
+                                <th>零售价</th>
+                                <th>零售金额</th>
+                                <th>类别名称</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+               <td>
+                   <table class="footer">
+                       <tbody>
+                       <tr>
+                           <td>
+                               <span class="bold">合计：</span>
+                           </td>
+                           <td>
+                               <span  class="bold">审核：</span>
+                           </td>
+                           <td>
+                               <span  class="bold">签收：</span>
+                           </td>
+                       </tr>
+                       </tbody>
+                   </table>
+               </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script src="../../common/jquery-2.2.2.min.js"></script>
+<script src="../../common/jquery-migrate-1.2.1.min.js"></script>
+<script src="../../common/jquery.jqprint-0.3.js"></script>
+<script>
+  const init = function () {
+    const trs = [];
+    const s = 'ABCDEFGHIGKLMNOPQRST';
+    for (let i = 0; i < 50; i++) {
+      const tds = []
+      for(j=0;j<13;j++ ) {
+        tds.push(`<td>${i+s.charAt(j)}</td>`)
+      }
+      trs.push(`<tr>${tds.join('')}</tr>`)
+    }
+    $('.body').find('tbody').html(trs.join(''))
+  }
+  $(document).ready(function () {
+    init()
+    $('.print').click(function () {
+      // $('.container').jqprint()
+      window.print()
+    })
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+//.loop(@counter, @name) when (@counter > 0) {
+//  .loop((@counter - 1), @name);
+//  @num: @counter +1;
+//  &:nth-child(@{num}){
+//    .status-icon{
+//      background:url("/assets/img/mine/my_state_baby_@{name}@{num}.png") no-repeat;
+//      background-size: contain;
+//    }
+//  }
+//}
+//.loop(4,sel)
+
+.loop(@counter, @name) when (@counter > 0) {
+  .loop((@counter - 1), @name);
+  &:nth-child(@{counter}){
+    width: (10px * @counter);
+          background:url("/assets/img/mine/my_state_baby_@{name}@{counter}.png") no-repeat;
+          background-size: contain;
+  }
+}
+.box{
+  .loop(5,sel); // launch the loop
+}

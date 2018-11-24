@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RichText</title>
+    <style>
+        .content1,  .content2{
+            width: 500px;
+            height: 300px;
+            box-sizing: border-box;
+            border: 1px solid #0000ff;
+            outline: none;
+            border-radius: 5px;
+            resize: none;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content1"></div>
+<button class="add-name" type="button">添加姓名</button>
+<button class="add-date" type="button">添加日期</button>
+<button class="get" type="button">get Value</button>
+<div class="content2"></div>
+<button class="add-name2" type="button">添加姓名</button>
+<button class="add-date2" type="button">添加日期</button>
+<button class="get2" type="button">get Value</button>
+
+</body>
+<script src="../../common/jquery-2.2.2.min.js"></script>
+<script>
+  (function ($) {
+    const CLASS_NAME = '-add-';
+    const NODE_NAME = 'SPAN';
+    const SPACE_CLASS = '-space-';
+    const ContentEdit = (function () {
+      function ContentEdit(element, options) {
+        this.element = element;
+        this.options = options;
+        this.init();
+      }
+
+      ContentEdit.prototype = {
+
+        /**
+         *  插件初始化
+         */
+        init: function () {
+          const me = this;
+          me._initView();
+          me._initEvent();
+        },
+
+        /**
+         * 视图初始化
+         * @private
+         */
+        _initView: function () {
+          const me = this;
+          me.element.attr('contenteditable', true);
+          me.hiddenInput = $(`<input hidden name="${me.options.inputName}">`);
+          me.element.after(me.hiddenInput);
+          let html = me.options.default;
+          if (html) {
+            me.hiddenInput.val(html);
+
+            $.each(me.options.map, function (key, opt) {
+              html = html.replace(new RegExp(opt.value), function () {
+                return `<span style="color:${opt.color}" class="${CLASS_NAME}" data-value="${opt.value}">${opt.name}</span>`;
+              });
+            });
+            html += `<span class="${SPACE_CLASS}">&nbsp;</span>`;
+            me.element.html(html);
+          }
+
+        },
+
+        /**
+         * 判单是否是插入的DOM
+         * @param ele
+         * @returns {*|boolean}
+         * @private
+         */
+        _isEditEle: function (ele) {
+          return ele && ele.nodeName === NODE_NAME && ele.className === CLASS_NAME;
+        },
+
+        /**
+         * 事件初始化
+         * @private
+         */
+        _initEvent: function () {
+          const me = this;
+          me._onHandleKeyDown();
+          me._onHandleBlur();
+          me._onHandlePaste();
+        },
+
+        /**
+         * 绑定键盘按下事件
+         * @private
+         */
+        _onHandleKeyDown: function () {
+          const me = this;
+          this.element.on('keydown', function (e) {
+            const section = document.getSelection();
+            const range = section.getRangeAt(0);
+            const ele = range.endContainer;
+            // 当前光标在插入文字中处理
+            switch (e.keyCode) {
+              case 46:  // delete
+                if (me._isEditEle(ele.parentNode)) {
+                  // 删除
+                  $(ele.parentNode).remove();
+                } else if (range.endOffset === ele.nodeValue.length && me._isEditEle(ele.nextSibling)) {
+                  e.preventDefault();
+                  $(ele.nextSibling).remove();
+                }
+                break;
+              case 8: // backspace
+                if (me._isEditEle(ele.parentNode)) {
+                  e.preventDefault();
+                  $(ele.parentNode).remove();
+                }
+                break;
+              case 13: // 回车
+                e.preventDefault();
+                range.insertNode($('<br/>')[0]);
+                break;
+            }
+          });
+
+        },
+
+        /**
+         * 绑定失去焦点事件
+         * @private
+         */
+        _onHandleBlur: function() {
+          const me = this;
+          this.element.on('blur', function () {
+            me.getValue();
+          });
+        },
+
+        /**
+         * 绑定粘贴事件
+         * @private
+         */
+        _onHandlePaste: function() {
+          const me = this;
+          me.element.on('paste', function () {
+            setTimeout(()=>{
+              me._clearHtml();
+              me.getValue();
+            }, 0);
+          });
+
+        },
+
+        /**
+         * 插入模板
+         * @param key
+         */
+        add: function(key) {
+          const me = this;
+          const {name, value, color} = me.options.map[key];
+          const section = document.getSelection();
+          let range;
+          try {
+            range = section.getRangeAt(0);
+            if (!this.element.find(range.endContainer)[0]){
+              range = null;
+              throw new Error('err');
+            }
+          } catch (e) {
+            if(me.element[0].lastChild){
+              range = document.createRange();
+              range.selectNode(me.element[0].lastChild);
+              range.collapse(false);
+            }
+          }
+          const insertEl = $(`<span style="color:${color};" data-value="${value}" class="${CLASS_NAME}">${name}</span>`)[0];
+          const insertSpace = $(`<span class="${SPACE_CLASS}">&nbsp;</span>`)[0];
+          // 如果有选区
+          if (range) {
+            const rangeEl = ((node) =>{
+              let el = $(node);
+              if (el.hasClass(CLASS_NAME) || el.hasClass(SPACE_CLASS)) return el;
+              el = $(node.parentNode);
+              if (el.hasClass(CLASS_NAME) || el.hasClass(SPACE_CLASS)) return el;
+              if(node === me.element[0] && me.lastInsertSpace) return me.lastInsertSpace;
+              return false;
+            })(range.endContainer);
+            // 如果选区是标签
+            if(rangeEl){
+              rangeEl.after(insertSpace);
+              rangeEl.after(insertEl);
+              range.selectNode(insertSpace);
+              range.collapse(false);
+            }else {
+              // 如果选区是文本节点
+              range.insertNode(insertEl);
+              range.collapse(false);
+              range.insertNode(insertSpace);
+              range.collapse(false);
+            }
+          } else {
+            this.element.append(insertEl);
+            this.element.append(insertSpace);
+          }
+
+          this.lastInsertSpace = insertSpace;
+
+          setTimeout(()=>{
+            me._clearHtml();
+            me.getValue();
+          }, 0);
+        },
+
+        /**
+         * 清楚多余的html标签
+         * @private
+         */
+        _clearHtml: function() {
+          const me = this;
+          me.element.children().each(function (i, ele) {
+            const className = ele.className;
+            ele = $(ele);
+            let text = ele.text();
+            switch (className) {
+              case CLASS_NAME:
+                ele.children().remove();
+                break;
+              case SPACE_CLASS:
+                if (text.trim()){
+                  ele.children().remove();
+                }
+                // else {
+                //   ele.after(document.createTextNode(text));
+                //   ele.remove();
+                // }
+                break;
+              default:
+                ele.after(text);
+                ele.remove();
+            }
+          });
+        },
+
+        /**
+         * html模板转换成字符串模板
+         * @param x
+         * @returns {*}
+         * @private
+         */
+        _cover: function(x) {
+          function covert(str) {
+            const ele =  $(str);
+            const value = ele.data('value');
+            const text = ele.hasClass(SPACE_CLASS) ? ele.text() : '';
+            return  value || text || str;
+          }
+          var test = /<span[^>]*>[\s\S]*?<\/[^>]*span>/g;
+          return x.replace(test, covert).replace(/&nbsp;/g, ' ');
+        },
+        getValue(){
+          const me = this;
+          const val =  me._cover(this.element.html()) || '';
+          me.hiddenInput.val(val);
+          return val;
+        }
+      };
+      return ContentEdit;
+    })();
+
+    $.fn.contentEdit = function (options, data) {
+      let val = '';
+      //实现链式调用
+      const ref = this.each(function () {
+        var me = $(this),
+          // 插件的实例
+          instance = me.data('ContentEdit');
+        // 单列模式
+        if (!instance) {
+          instance = new ContentEdit(me, options);
+          me.data('ContentEdit', instance);
+        } else {
+          if ($.type(options) === 'object'){
+            instance.options = options;
+          }
+        }
+        if ($.type(options) === 'string') return val = instance[options](data);
+      });
+
+      if ($.type(options) === 'string') {
+        return val;
+      }else {
+        return ref;
+      }
+    };
+  })(jQuery);
+</script>
+<script>
+  $('.content1').contentEdit({
+    // default: '尊敬的{{name}}, 活动即将到期，到期时间{{date}}', // 默认值
+    inputName: 'text123', // 表单提交字段
+    map: {
+      date: {
+        name: '添加日期',
+        color: 'red',
+        value: '{{date}}'
+      },
+      name: {
+        name: '添加姓名',
+        color: 'blue',
+        value: '{{name}}'
+      }
+    },
+
+  });
+  $('.content2').contentEdit({
+    default: '尊敬的{{name}}, 活动即将到期，到期时间{{date}}', // 默认值
+    inputName: 'text', // 表单提交字段
+    map: {
+      date: {
+        name: '添加日期',
+        color: 'red',
+        value: '{{date}}'
+      },
+      name: {
+        name: '添加姓名',
+        color: 'blue',
+        value: '{{name}}'
+      }
+    },
+
+  });
+
+  $('.add-name').click(function () {
+    $('.content1').contentEdit('add', 'name');
+  });
+  $('.add-date').click(function () {
+    $('.content1').contentEdit('add', 'date');
+  });
+
+  $('.get').click(function () {
+    console.log($('.content1').contentEdit('getValue'))
+  });
+
+  $('.add-name2').click(function () {
+    $('.content2').contentEdit('add', 'name');
+  });
+  $('.add-date2').click(function (e) {
+    e.preventDefault()
+    $('.content2').contentEdit('add', 'date');
+  });
+
+  $('.get2').click(function () {
+    console.log($('.content2').contentEdit('getValue'))
+  });
+</script>
+<script>
+
+</script>
+</html>

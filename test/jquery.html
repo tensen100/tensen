@@ -8,27 +8,27 @@
 <body>
 <button>click</button>
 <script>
-    let end = true; // 是否结束
-    $(document).on('click','button',function () {
-      console.log(1)
+  // 解析url查询参数,封装成对象
+  $.parseParam = (str) => {
+    str = str || location.search;
+    const obj = {};
+    if (!str) {
+      return obj;
+    }
+    const  de = (url) => {
+      url = decodeURIComponent(url);
+      return /%25/.test(url) ? de(url) : url;
+    };
+    str = de(str);
+    str.split('?')[1].split('&').forEach( s => {
+      const p = s.split('=');
+      obj[p[0]] = p[1];
     });
+    return obj;
+  };
 
-    $('button').click(function () {
-      console.log(2);
-      if(end) {
-        end = false;
-        setTimeout( _ => {
-          console.log(3);
-          $('button').click();
-          end = true;
-        },2000);
-        return false
-      }
-      return true;
-
-    })
-
-
+  const str = '"?page=1&limit=10&storeIds=206%252C209%252C200%252C195%252C193%252C191%252C190%252C188%252C186%252C184&storeIds_name=%25E5%25A4%25A9%25E5%25A4%25A9%25E4%25B9%2590%25E5%25AE%259D%25EF%25BC%2588%25E5%258D%2597%25E9%2580%259A%25EF%25BC%2589%25E7%259B%25B4%25E8%2590%25A5%25E5%25BA%2597%252C121%252C%25E8%259C%2597%25E7%259B%259F%25E6%25AF%258D%25E5%25A9%25B4%252C%25E9%25BA%25A6%25E4%25B9%2590%25E5%25AE%259D%25E8%25B4%259D%25EF%25BC%2588%25E6%25B3%2589%25E5%25B7%259E%25EF%25BC%2589%252C%25E6%25B3%2589%25E5%25B7%259E%25E9%25BA%25A6%25E4%25B9%2590%25E5%25AE%259D%25E8%25B4%259D%252C%25E6%25B3%2589%25E5%25B7%259E%25E6%2580%25BB%25E5%25BA%2597%252C%25E9%25BA%25A6%25E4%25B9%2590%25E5%25AE%259D%25E8%25B4%259D1%25E5%25BA%2597%252C%25E5%258F%25B0%25E6%25B9%25BE1%25E5%258F%25B7%25E5%25BA%2597%252C%25E6%2596%25B0%25E9%25BA%25A6%25E4%25B9%2590%25E5%25AE%259D%25E8%25B4%259D%252C%25E4%25B8%25B0%25E6%25B3%25BD%25E5%258C%25BA%25E9%2597%25A8%25E5%25BA%2597&stime=2018-11-01&etime=2018-11-30&dateType_stime=5"'
+  console.log($.parseParam(str))
 
 </script>
 </body>

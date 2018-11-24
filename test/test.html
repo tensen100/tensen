@@ -3,24 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Test</title>
-
-    <!--<script type="text/javascript" src="../js/dom/ready.js"></script>-->
+    <style>
+        .box{
+            width: 200px;
+            border: 1px saddlebrown solid;
+            position: relative;
+            overflow: hidden;
+        }
+        .box span{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+        .box p{
+            margin: 0;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            float: right;
+        }
+    </style>
 </head>
 <body>
-<div id="box1">hello</div>
-<div id="box2"></div>
-<!--<script type="text/javascript" src="../js/dom/dom.js"></script>-->
-<script>
-    const obj = {
-        user: {name: 'aaa',id: 'bbb'},
-        phone: '123'
-    }
 
-    function transform(obj) {
-        const { user: {name}, phone} = obj;
-        console.log(name, phone)
-    }
-    transform(obj);
+<script>
+    const ids = [1,2,3,4,5,6]
+    ids.forEach((id) => {
+      if( id > 2) {
+        return false
+      }
+      console.log(id)
+    })
 </script>
+
 </body>
 </html>
