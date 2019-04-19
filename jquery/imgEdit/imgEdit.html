@@ -119,7 +119,7 @@
 </head>
 <body>
 <!--multiple-->
-<button type="button" class="layui-btn img-upload" data-size="200,800" data-preview="#preview">
+<button type="button" class="layui-btn img-upload" data-size="400,300" data-preview="#preview">
     <i class="layui-icon">&#xe67c;</i>上传图片
 </button>
 <!--<input class="file-input" type="file" value="选择图片" data-size="400,300">-->
@@ -147,7 +147,6 @@
         return;
       }
       return URL.createObjectURL(file);
-
     };
 
     /**
@@ -189,8 +188,8 @@
 
     const WRAPPER_CLASS_NAME = 'img-edit-wrapper';
     const CONTAINER_CLASS_NAME = 'img-edit-container';
-    const VIEW_WIDTH = 1000;
-    const VIEW_HEIGHT = 563;
+    const VIEW_WIDTH = 600;
+    const VIEW_HEIGHT = 300;
     const VIEW_CLASS_NAME = 'view';
     const VIEW_MASK_CLASS = 'mask';
     const VIEW_POINT_CLASS = 'point';
@@ -200,6 +199,7 @@
     const EVENT_DOWN = 'mousedown';
     const EVENT_UP = 'mouseup';
     const EVENT_MOVE = 'mousemove';
+
 
     class ImgEdit {
       constructor({file, container, size, preview}) {
@@ -615,7 +615,7 @@
       });
     };
 
-// 使用
+    // 使用
     $(document).ready(function () {
       $.imgUpload();
     });

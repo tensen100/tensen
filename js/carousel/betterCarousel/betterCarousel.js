@@ -130,7 +130,6 @@ const BetterCarousel = (() => {
                 me.runAnimal(next, ANIMATION_TYPE.enter, direction, me.animate[0]);
             } else {
                 me.split(cur,next, ({newCur, newNext,row,col}) => {
-
                     const animalName = me.getAnimalName(row,col);
                     console.log(row, col,animalName);
                     me.runAnimal(newCur, ANIMATION_TYPE.leave, direction, animalName);
@@ -139,6 +138,7 @@ const BetterCarousel = (() => {
             }
             me.index = idx;
         }
+
         getAnimalName(row, col){
             const animals = this.animate;
             if (animals.length === 1) {

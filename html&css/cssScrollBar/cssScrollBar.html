@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>纯css进度条</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        ul, li{
+            list-style: none;
+        }
+        li{
+            height: 150px;
+        }
+        li:nth-child(2n){
+            background: rgba(0,0,0,0.5);
+        }
+
+        body{
+            background-image: linear-gradient(to right top, #ff0000 50%, #000000 50%);
+            background-size: 100% calc(100% - 100vh + 5px);
+            background-repeat: no-repeat;
+        }
+        body:after{
+            content: '';
+            position: fixed;
+            top: 5px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: #ffffff;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+</body>
+</html>
